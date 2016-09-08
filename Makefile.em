@@ -3,7 +3,7 @@ CXXFLAGS = -O2 -g -c -std=c++0x -Iincludes
 CXX = em++
 OBJS = boilerplate/main.o boilerplate/render.o boilerplate/x11.o boilerplate/GLES2Lesson.o
 
-TARGET = demo.html
+TARGET = game.html
 
 $(TARGET):	$(OBJS)
 	$(CXX) -o $(TARGET) $(OBJS) $(LDFLAGS)
