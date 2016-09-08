@@ -289,8 +289,8 @@ void GLES2Lesson::render() {
 }
 
 void GLES2Lesson::tick() {
-    triangleRotationAngle += 1.0f;
-    squareRotationAngle += 1.0f;
+    triangleRotationAngle += 3.14159f / 180.0f;
+    squareRotationAngle += 3.14159f / 180.0f;
 }
 
 void GLES2Lesson::shutdown() {
