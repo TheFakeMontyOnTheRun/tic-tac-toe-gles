@@ -1,7 +1,7 @@
-CXXFLAGS = -O2 -g -c -std=c++0x
+CXXFLAGS = -O2 -g -c -std=c++0x -Iincludes
 LDFLAGS = -lX11 -lGLESv2 -lEGL
 CXX = clang++
-OBJS = main.o render.o x11_gcc.o GLES2Lesson.o
+OBJS = boilerplate/main.o boilerplate/render.o boilerplate/x11_gcc.o boilerplate/GLES2Lesson.o
 
 TARGET = demo
 

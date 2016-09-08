@@ -11,6 +11,10 @@
 #include <GLES2/gl2.h>
 #include <EGL/egl.h>
 #include "glue.h"
+#include <iostream>
+
+#include <html5.h>
+
 
 /*
  * Create an RGB, double-buffered X window.
@@ -65,15 +69,6 @@ extern void make_x_window(Display *x_dpy, EGLDisplay egl_dpy,
       exit(1);
    }
 
-   /* The X window visual must match the EGL config */
-   //   visTemplate.visualid = vid;
-   /*
-   visInfo = XGetVisualInfo(x_dpy, VisualIDMask, &visTemplate, &num_visuals);
-   if (!visInfo) {
-      printf("Error: couldn't get X visual\n");
-      exit(1);
-   }
-   */
    /* window attributes */
    attr.background_pixel = 0;
    attr.border_pixel = 0;
@@ -93,9 +88,6 @@ extern void make_x_window(Display *x_dpy, EGLDisplay egl_dpy,
       sizehints.width  = width;
       sizehints.height = height;
       sizehints.flags = USSize | USPosition;
-      // XSetNormalHints(x_dpy, win, &sizehints);
-      // XSetStandardProperties(x_dpy, win, name, name,
-      //                      None, (char **)NULL, 0, &sizehints);
    }
 
    eglBindAPI(EGL_OPENGL_ES_API);
@@ -132,64 +124,15 @@ extern void make_x_window(Display *x_dpy, EGLDisplay egl_dpy,
       assert(val & EGL_WINDOW_BIT);
    }
 
-   //XFree(visInfo);
-
    *winRet = win;
    *ctxRet = ctx;
 }
-
 
 extern void
 event_loop(Display *dpy, Window win,
            EGLDisplay egl_dpy, EGLSurface egl_surf)
 {
-  //   while (1) {
-      int redraw = 0;
-      XEvent event;
-/*
-      XNextEvent(dpy, &event);
-
-      switch (event.type) {
-      case Expose:
-         redraw = 1;
-         break;
-      case ConfigureNotify:
-         reshape(event.xconfigure.width, event.xconfigure.height);
-         break;
-      case KeyPress:
-         {
-            char buffer[10];
-            int r, code;
-            code = XLookupKeysym(&event.xkey, 0);
-            if (code == XK_Left) {
-               view_roty += 5.0;
-            }
-            else if (code == XK_Right) {
-               view_roty -= 5.0;
-            }
-            else if (code == XK_Up) {
-               view_rotx += 5.0;
-            }
-            else if (code == XK_Down) {
-               view_rotx -= 5.0;
-            }
-            else {
-               r = XLookupString(&event.xkey, buffer, sizeof(buffer),
-                                 NULL, NULL);
-               if (buffer[0] == 27) {
-                    return;
-               }
-            }
-         }
-         redraw = 1;
-         break;
-      default:
-        }
-*/
-//      if (redraw) {
          draw();
          eglSwapBuffers(egl_dpy, egl_surf);
-  //    }
-      //   }
 }
 

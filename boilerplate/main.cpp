@@ -5,6 +5,7 @@
 #include <string.h>
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
+#include <iostream>
 
 #include <GLES2/gl2.h>
 #include <EGL/egl.h>
@@ -14,6 +15,21 @@
 #include <emscripten.h>
 #include <emscripten/html5.h>
 
+
+extern "C" {
+  EM_BOOL keydown_callback(int eventType, const EmscriptenKeyboardEvent *e, void *userData) {
+	std::cout << "keydown: " << e->keyCode << std::endl;
+	return true;
+  }
+  EM_BOOL keypress_callback(int eventType, const EmscriptenKeyboardEvent *e, void *userData) {
+	std::cout << "keypress: " << e->keyCode << std::endl;
+    	return true;
+  }
+  EM_BOOL keyup_callback(int eventType, const EmscriptenKeyboardEvent *e, void *userData) {
+	std::cout << "keyUp: " << e->keyCode << std::endl;
+	return true;
+  }
+}
 #endif
 
 
@@ -89,6 +105,25 @@ int main(int argc, char *argv[]) {
 	reshape(winWidth, winHeight);
 
 #ifdef __EMSCRIPTEN__
+
+
+	if ( emscripten_set_keydown_callback("#document", nullptr, true, keydown_callback) == EMSCRIPTEN_RESULT_SUCCESS ) {
+		std::cout << "down ok" << std::endl; 
+	}else{	
+		std::cout << "down not ok" << std::endl;
+	}
+
+	if ( emscripten_set_keypress_callback("#document", nullptr, true, keypress_callback) == EMSCRIPTEN_RESULT_SUCCESS ) {
+		std::cout << "press ok" << std::endl; 
+	}else{	
+		std::cout << "press not ok" << std::endl;
+	}
+
+	if ( emscripten_set_keyup_callback("#document", nullptr, true, keyup_callback) == EMSCRIPTEN_RESULT_SUCCESS ){
+		std::cout << "up ok" << std::endl; 
+	}else{	
+		std::cout << "up not ok" << std::endl;
+	}
       emscripten_set_main_loop( gameLoopTick, 30, 1 );
 #else
 	event_loop(x_dpy, win, egl_dpy, egl_surf);
