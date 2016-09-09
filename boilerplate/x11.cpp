@@ -3,13 +3,15 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-
+#include <iostream>
+#include <array>
 #include <X11/Xlib.h>
 #include <X11/Xatom.h>
 #include <X11/Xutil.h>
 
 #include <GLES2/gl2.h>
 #include <EGL/egl.h>
+#include "Game.h"
 #include "glue.h"
 #include <iostream>
 
@@ -130,7 +132,7 @@ extern void make_x_window(Display *x_dpy, EGLDisplay egl_dpy,
 
 extern void
 event_loop(Display *dpy, Window win,
-           EGLDisplay egl_dpy, EGLSurface egl_surf)
+           EGLDisplay egl_dpy, EGLSurface egl_surf, odb::Game& game)
 {
          draw();
          eglSwapBuffers(egl_dpy, egl_surf);

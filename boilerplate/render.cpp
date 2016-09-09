@@ -5,16 +5,15 @@
 #include <string.h>
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
-
+#include <array>
+#include <iostream>
 #include <GLES2/gl2.h>
 #include <EGL/egl.h>
 
 #include "glm/glm.hpp"
-
+#include "Game.h"
 #include "glue.h"
 #include "glm/gtc/matrix_transform.hpp"
-
-
 #include <iostream>
 #include "GLES2Lesson.h"
 

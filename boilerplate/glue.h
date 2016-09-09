@@ -1,9 +1,6 @@
 #ifndef GLUE_H
 #define GLUE_H
 
-static GLfloat view_rotx = 0.0, view_roty = 0.0;
-
-
 extern void draw();
 
 /* new window size or exposure */
@@ -25,7 +22,7 @@ extern void make_x_window(Display *x_dpy, EGLDisplay egl_dpy,
 
 
 extern void event_loop(Display *dpy, Window win,
-           EGLDisplay egl_dpy, EGLSurface egl_surf);
+           EGLDisplay egl_dpy, EGLSurface egl_surf, odb::Game& game );
 
 
 

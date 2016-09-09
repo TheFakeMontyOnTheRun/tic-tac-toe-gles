@@ -1,6 +1,8 @@
 //
 // Created by monty on 23/11/15.
 //
+#include <iostream>
+#include <array>
 
 #include <assert.h>
 #include <math.h>
@@ -14,7 +16,7 @@
 #include <EGL/egl.h>
 
 #include "glm/glm.hpp"
-
+#include "Game.h"
 #include "glue.h"
 #include "glm/gtc/matrix_transform.hpp"
 

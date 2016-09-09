@@ -6,27 +6,57 @@
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 #include <iostream>
+#include <array>
 
 #include <GLES2/gl2.h>
 #include <EGL/egl.h>
+#include "Game.h"
 #include "glue.h"
 
+odb::Game game;
+
 #ifdef __EMSCRIPTEN__
+
 #include <emscripten.h>
 #include <emscripten/html5.h>
 
 
 extern "C" {
   EM_BOOL keydown_callback(int eventType, const EmscriptenKeyboardEvent *e, void *userData) {
-	std::cout << "keydown: " << e->keyCode << std::endl;
+
+	std::string code = e->code;
+
+	if ( code == "ArrowLeft") {
+		game.moveLeft();
+		game.printStatus();
+	}
+
+	if ( code == "ArrowRight") {
+		game.moveRight();
+		game.printStatus();
+	}
+
+	if ( code == "ArrowUp") {
+		game.moveUp();
+		game.printStatus();
+	}
+
+	if ( code == "ArrowDown") {
+		game.moveDown();
+		game.printStatus();
+	}
+
+	if ( code == "KeyZ") {
+		game.setPieceOnSlot();
+		game.printStatus();
+	}
+
 	return true;
   }
   EM_BOOL keypress_callback(int eventType, const EmscriptenKeyboardEvent *e, void *userData) {
-	std::cout << "keypress: " << e->keyCode << std::endl;
     	return true;
   }
   EM_BOOL keyup_callback(int eventType, const EmscriptenKeyboardEvent *e, void *userData) {
-	std::cout << "keyUp: " << e->keyCode << std::endl;
 	return true;
   }
 }
@@ -103,7 +133,7 @@ int main(int argc, char *argv[]) {
 	 * first appears.
 	 */
 	reshape(winWidth, winHeight);
-
+    game.printStatus();
 #ifdef __EMSCRIPTEN__
 
 
@@ -126,7 +156,7 @@ int main(int argc, char *argv[]) {
 	}
       emscripten_set_main_loop( gameLoopTick, 30, 1 );
 #else
-	event_loop(x_dpy, win, egl_dpy, egl_surf);
+	event_loop(x_dpy, win, egl_dpy, egl_surf, game);
 #endif
 
 
@@ -134,14 +164,10 @@ int main(int argc, char *argv[]) {
 	eglDestroySurface(egl_dpy, egl_surf);
 	eglTerminate(egl_dpy);
 
-
-	//XDestroyWindow(x_dpy, win);
-	//XCloseDisplay(x_dpy);
-
 	return 0;
 }
 
 
 void gameLoopTick() {
-	event_loop(x_dpy, win, egl_dpy, egl_surf);
+	event_loop(x_dpy, win, egl_dpy, egl_surf, game );
 }
