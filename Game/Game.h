@@ -7,7 +7,7 @@
 
 namespace odb {
     class Game {
-        enum class EPieces {
+        enum EPieces {
             kBlank, kCircle, kCross
         };
 
@@ -19,6 +19,7 @@ namespace odb {
         std::array<std::array<EPieces, 3>, 3> mTable;
         Vec2i mCursor;
         EPieces mPlayerTeam = EPieces::kCircle;
+        bool gameOver = false;
 
         void contrainCursorOnTable();
         void makeCPUMove();

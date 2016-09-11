@@ -19,7 +19,7 @@ namespace odb {
 
     void Game::printStatus() {
 
-
+        
         std::cout << "cursor at " << mCursor.x << ", " << mCursor.y << std::endl;
         int y = 0;
         for ( auto line : mTable ) {
@@ -76,18 +76,28 @@ namespace odb {
 
     void Game::setPieceOnSlot() {
         mTable[ mCursor.y ][ mCursor.x ] = mPlayerTeam;
+        
         contrainCursorOnTable();
+        checkEndGameConditions();
+        
         makeCPUMove();
         checkEndGameConditions();
     }
 
     void Game::contrainCursorOnTable() {
+        if (gameOver)
+            return;
+
         mCursor.x = std::min( std::max( 0, mCursor.x), 2 );
         mCursor.y = std::min( std::max( 0, mCursor.y), 2 );
+
         printStatus();
     }
 
     void Game::makeCPUMove() {
+        if (gameOver)
+            return;
+
         for ( auto& line : mTable ) {
             for (auto& slot : line) {
                 if ( slot == EPieces::kBlank ) {
@@ -100,6 +110,21 @@ namespace odb {
     }
 
     void Game::checkEndGameConditions() {
-
+        if (gameOver)
+            return;
+            
+        for (int i=0; i<mTable.size(); i++) 
+        {
+            if ((mTable[i][0] == 1) && (mTable[i][1] == 1) && (mTable[i][2] == 1)) {
+                std::cout << "Vitoria 0" << std::endl;
+                gameOver = true;  
+                return;
+            }
+            else if ((mTable[i][0] == 2) && (mTable[i][1] == 2) && (mTable[i][2] == 2)) {
+                std::cout << "Vitoria X" << std::endl;
+                gameOver = true;
+                return;
+            }
+        }
     }
 }
