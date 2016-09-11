@@ -20,38 +20,38 @@ class GLES2Lesson {
     GLuint createProgram(const char *pVertexSource, const char *pFragmentSource);
     GLuint loadShader(GLenum shaderType, const char *pSource);
 
-    const static float triangleVertices[ 18 ];
-    const static unsigned short triangleIndices[ 3 ];
+    const static float cubeVertices[ 16 * 5 ];
+    const static unsigned short cubeIndices[ 6 * 6 ];
 
-    const static float squareVertices[ 24 ];
-    const static unsigned short squareIndices[ 4 ];
-
-    glm::mat4 triangleTransformMatrix;
-    glm::mat4 squareTransformMatrix;
+    glm::mat4 cubeTransformMatrix;
     glm::mat4 projectionMatrix;
 
     GLuint vertexAttributePosition;
-    GLuint colourAttributePosition;
     GLuint modelMatrixAttributePosition;
+    GLuint samplerUniformPosition;
+    GLuint textureCoordinatesAttributePosition;
     GLuint projectionMatrixAttributePosition;
     GLuint gProgram;
 
-    //VBO stuff
-    GLuint vboTriangleVertexDataIndex;
-    GLuint vboSquareVertexDataIndex;
-    GLuint vboTriangleVertexIndicesIndex;
-    GLuint vboSquareVertexIndicesIndex;
+    GLuint textureId;
 
-    float triangleRotationAngle;
-    float squareRotationAngle;
+    //VBO stuff
+    GLuint vboCubeVertexDataIndex;
+    GLuint vboCubeVertexIndicesIndex;
+
+    int *textureData;
+    int textureWidth;
+    int textureHeight;
+    float cubeRotationAngleYZ;
+    float cubeRotationAngleXZ;
 public:
     GLES2Lesson();
     ~GLES2Lesson();
     bool init( float w, float h, const std::string& vertexShader, const std::string& fragmentShader );
+    void setTexture( int *bitmapData, int width, int height, int format );
     void render();
     void shutdown();
     void tick();
 };
 
 #endif //LESSON02_GLES2LESSON_H
-
