@@ -26,7 +26,7 @@
 #include <iostream>
 #include "GLES2Lesson.h"
 
-GLES2Lesson* gles2Lesson = nullptr;
+odb::GLES2Lesson* gles2Lesson = nullptr;
 
 extern void draw() {
 	if ( gles2Lesson != nullptr ) {
@@ -127,7 +127,7 @@ extern void init() {
 	std::string gFragmentShader = readShaderFrom( "res/fragment.glsl" );
     std::string gVertexShader = readShaderFrom( "res/vertex.glsl" );
 
-	gles2Lesson = new GLES2Lesson();
-    gles2Lesson->setTexture( loadPNG( "res/texture.png", 128, 128 ), 128, 128, 1);
+	gles2Lesson = new odb::GLES2Lesson();
+    gles2Lesson->setTexture( loadPNG( "res/texture.png", 128, 128 ), loadPNG( "res/hexa.png", 128, 128 ), 128, 128, 1);
 	gles2Lesson->init(300, 300, gVertexShader.c_str(), gFragmentShader.c_str());
 }

@@ -1,13 +1,27 @@
 attribute vec4 aPosition;
-attribute vec4 aColour;
 attribute vec2 aTexCoord;
+attribute vec4 aVertexNormal;
+attribute vec3 aTangent;
+
+varying vec3 vObjectSpaceTangent;
+varying vec3 vObjectSpaceNormal;
+
 uniform mat4 uModel;
 uniform mat4 uProjection;
 varying vec2 vTextureCoords;
-varying vec4 vColour;
+uniform vec4 uDiffuseLightPosition;
+varying vec4 vTransformedVertex;
 
 void main() {
-    gl_Position =  uProjection * uModel * aPosition;
-    vColour = aColour;
     vTextureCoords = aTexCoord;
+
+    mat4 mvpMatrix = uProjection * uModel;
+
+    vObjectSpaceNormal = aVertexNormal.xyz;
+    vObjectSpaceTangent = aTangent;
+
+    vTransformedVertex = mvpMatrix * aPosition;
+
+    gl_Position =  vTransformedVertex;
+
 }
