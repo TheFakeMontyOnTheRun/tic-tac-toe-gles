@@ -41,6 +41,13 @@ static void
 create_shaders(void) {
 }
 
+std::string readShaderFrom( std::string path ) {
+    std::ifstream file( path );
+    std::string toReturn((std::istreambuf_iterator<char>(file)),
+                         std::istreambuf_iterator<char>());
+
+    return toReturn;
+}
 extern void init() {
 
 	std::string gFragmentShader = readShaderFrom( "res/fragment.glsl" );
