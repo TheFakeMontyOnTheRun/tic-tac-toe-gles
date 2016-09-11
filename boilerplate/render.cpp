@@ -7,6 +7,11 @@
 #include <X11/Xutil.h>
 #include <array>
 #include <iostream>
+#include <string>
+#include <fstream>
+#include <streambuf>
+#include <iterator>
+#include <fstream>
 #include <GLES2/gl2.h>
 #include <EGL/egl.h>
 
@@ -38,26 +43,8 @@ create_shaders(void) {
 
 extern void init() {
 
-	std::string gFragmentShader =
-			"precision mediump float;\n"		
-					"varying vec4 vColour;\n"			
-					"void main() {\n"
-					"   gl_FragColor = vColour;\n"
-					"}\n";
-
-
-
-	std::string gVertexShader =
-			"precision mediump float;\n"
-					"uniform mat4 uModel;\n"
-					"uniform mat4 uProjection;\n"
-					"attribute vec4 aPosition;\n"					
-					"attribute vec4 aColour;\n"	
-					"varying vec4 vColour;\n"	
-					"void main() {\n"
-					"       gl_Position =  uProjection * uModel * aPosition;\n"
-					"       vColour = aColour;\n"
-					"}\n";
+	std::string gFragmentShader = readShaderFrom( "res/fragment.glsl" );
+    std::string gVertexShader = readShaderFrom( "res/vertex.glsl" );
 
 	gles2Lesson = new GLES2Lesson();
 	gles2Lesson->init(300, 300, gVertexShader.c_str(), gFragmentShader.c_str());
