@@ -78,7 +78,7 @@ namespace odb {
         mTable[ mCursor.y ][ mCursor.x ] = mPlayerTeam;
         
         contrainCursorOnTable();
-        checkEndGameConditions();
+        //checkEndGameConditions();
         
         makeCPUMove();
         checkEndGameConditions();
@@ -109,22 +109,69 @@ namespace odb {
         }
     }
 
-    void Game::checkEndGameConditions() {
+    bool Game::returnColVictory(int col)
+    {
+        if ((mTable[0][col] == 1) && (mTable[1][col] == 1) && (mTable[2][col] == 1)) {
+            std::cout << "Vitoria COL 0" << std::endl;
+
+            //PrintVictory();
+            return true;
+        }
+        else if ((mTable[0][col] == 2) && (mTable[1][col] == 2) && (mTable[2][col] == 2)) {
+            std::cout << "Vitoria COL X" << std::endl;
+
+            //PrintVictory();
+            return true;
+        }
+
+        return false;
+    }
+
+    void Game::checkEndGameConditions() 
+    {
         if (gameOver)
             return;
-            
-        for (int i=0; i<mTable.size(); i++) 
+
+        int colValue0 = 0;
+        int colValue1 = 0;
+        int colValue2 = 0;
+
+        bool sequenceCol0 = true;
+        bool sequenceCol1 = true;
+        bool sequenceCol2 = true;
+
+        // Check for row Victory
+        for (int x=0; x<mTable.size(); x++) 
         {
-            if ((mTable[i][0] == 1) && (mTable[i][1] == 1) && (mTable[i][2] == 1)) {
-                std::cout << "Vitoria 0" << std::endl;
-                gameOver = true;  
+            if ((mTable[x][0] == 1) && (mTable[x][1] == 1) && (mTable[x][2] == 1)) {
+                std::cout << "Vitoria ROW 0" << std::endl;
+                gameOver = true;
+                
+                //PrintVictory();
                 return;
             }
-            else if ((mTable[i][0] == 2) && (mTable[i][1] == 2) && (mTable[i][2] == 2)) {
-                std::cout << "Vitoria X" << std::endl;
+            else if ((mTable[x][0] == 2) && (mTable[x][1] == 2) && (mTable[x][2] == 2)) {
+                std::cout << "Vitoria ROW X" << std::endl;
                 gameOver = true;
+                
+                //PrintVictory();
                 return;
             }
         }
+
+        // Check for Col1 victory
+        for (int x=0; x<2; x++)
+        {
+            gameOver = returnColVictory(x);
+
+            if (gameOver)
+                return;
+        }
     }
+
+    void PrintVictory(int *position1, int *position2, int *position3)
+    {
+
+    }
+
 }
