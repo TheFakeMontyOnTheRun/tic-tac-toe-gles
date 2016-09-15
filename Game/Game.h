@@ -24,7 +24,7 @@ namespace odb {
         void contrainCursorOnTable();
         void makeCPUMove();
         void checkEndGameConditions();
-        bool returnColVictory();
+        bool returnColVictory(int col);
     public:
         Game();
         void printStatus();

@@ -167,6 +167,44 @@ namespace odb {
             if (gameOver)
                 return;
         }
+
+        // Check for diagonal victory
+        {
+            if (mTable[1][1] == 1)
+             {
+                if ((mTable[0][0] == mTable[2][2]) && mTable[0][0] == 1) {
+                    std::cout << "Vitoria DIAG X" << std::endl;
+                    gameOver = true;
+
+                    //PrintVictory();
+                    return;
+                }
+                else if ((mTable[0][2] == mTable[2][0]) && mTable[0][2] == 1) {
+                    std::cout << "Vitoria DIAG X" << std::endl;
+                    gameOver = true;
+
+                    //PrintVictory();
+                    return;
+                }                
+            }
+            else if (mTable[1][1] == 2)
+            {
+                if ((mTable[0][0] == mTable[2][2]) && mTable[0][0] == 2) {
+                    std::cout << "Vitoria DIAG 0" << std::endl;
+                    gameOver = true;
+
+                    //PrintVictory();
+                    return;
+                }
+                else if ((mTable[0][2] == mTable[2][0]) && mTable[0][2] == 2) {
+                    std::cout << "Vitoria DIAG 0" << std::endl;
+                    gameOver = true;
+                    
+                    //PrintVictory();
+                    return;
+                }                    
+            }
+        }
     }
 
     void PrintVictory(int *position1, int *position2, int *position3)
