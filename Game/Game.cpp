@@ -78,10 +78,10 @@ namespace odb {
         mTable[ mCursor.y ][ mCursor.x ] = mPlayerTeam;
         
         contrainCursorOnTable();
-        //checkEndGameConditions();
+        checkEndGameConditions(EPieces::kCircle);
         
         makeCPUMove();
-        checkEndGameConditions();
+        checkEndGameConditions(EPieces::kCross);
     }
 
     void Game::contrainCursorOnTable() {
@@ -109,102 +109,36 @@ namespace odb {
         }
     }
 
-    bool Game::returnColVictory(int col)
+    bool Game::returnVictory(int row, int col)
     {
-        if ((mTable[0][col] == 1) && (mTable[1][col] == 1) && (mTable[2][col] == 1)) {
-            std::cout << "Vitoria COL 0" << std::endl;
-
-            //PrintVictory();
+        // Check fow Col victory
+        if ((mTable[0][col] == EPieces::kCircle) && (mTable[1][col] == EPieces::kCircle) && (mTable[2][col] == EPieces::kCircle)) {
             return true;
         }
-        else if ((mTable[0][col] == 2) && (mTable[1][col] == 2) && (mTable[2][col] == 2)) {
-            std::cout << "Vitoria COL X" << std::endl;
 
-            //PrintVictory();
+        // Check fow Row victory
+        if ((mTable[row][0] == EPieces::kCircle) && (mTable[row][1] == EPieces::kCircle) && (mTable[row][2] == EPieces::kCircle)) {
             return true;
         }
+
+        // Check for Diag victory
+        if ((mTable[0][0] == EPieces::kCircle) && (mTable[1][1] == EPieces::kCircle) && (mTable[2][2] == EPieces::kCircle)) {
+            return true;
+        }
+        else if ((mTable[0][2] == EPieces::kCircle) && (mTable[1][1] == EPieces::kCircle) && (mTable[2][0] == EPieces::kCircle)) {
+            return true;
+        }      
 
         return false;
     }
 
-    void Game::checkEndGameConditions() 
+    void Game::checkEndGameConditions(enum EPieces) 
     {
         if (gameOver)
             return;
-
-        int colValue0 = 0;
-        int colValue1 = 0;
-        int colValue2 = 0;
-
-        bool sequenceCol0 = true;
-        bool sequenceCol1 = true;
-        bool sequenceCol2 = true;
-
-        // Check for row Victory
-        for (int x=0; x<mTable.size(); x++) 
-        {
-            if ((mTable[x][0] == 1) && (mTable[x][1] == 1) && (mTable[x][2] == 1)) {
-                std::cout << "Vitoria ROW 0" << std::endl;
-                gameOver = true;
-                
-                //PrintVictory();
-                return;
-            }
-            else if ((mTable[x][0] == 2) && (mTable[x][1] == 2) && (mTable[x][2] == 2)) {
-                std::cout << "Vitoria ROW X" << std::endl;
-                gameOver = true;
-                
-                //PrintVictory();
-                return;
-            }
-        }
-
-        // Check for Col1 victory
-        for (int x=0; x<2; x++)
-        {
-            gameOver = returnColVictory(x);
-
-            if (gameOver)
-                return;
-        }
-
-        // Check for diagonal victory
-        {
-            if (mTable[1][1] == 1)
-             {
-                if ((mTable[0][0] == mTable[2][2]) && mTable[0][0] == 1) {
-                    std::cout << "Vitoria DIAG X" << std::endl;
-                    gameOver = true;
-
-                    //PrintVictory();
-                    return;
-                }
-                else if ((mTable[0][2] == mTable[2][0]) && mTable[0][2] == 1) {
-                    std::cout << "Vitoria DIAG X" << std::endl;
-                    gameOver = true;
-
-                    //PrintVictory();
-                    return;
-                }                
-            }
-            else if (mTable[1][1] == 2)
-            {
-                if ((mTable[0][0] == mTable[2][2]) && mTable[0][0] == 2) {
-                    std::cout << "Vitoria DIAG 0" << std::endl;
-                    gameOver = true;
-
-                    //PrintVictory();
-                    return;
-                }
-                else if ((mTable[0][2] == mTable[2][0]) && mTable[0][2] == 2) {
-                    std::cout << "Vitoria DIAG 0" << std::endl;
-                    gameOver = true;
-                    
-                    //PrintVictory();
-                    return;
-                }                    
-            }
-        }
+        
+        gameOver = returnVictory(mCursor.y, mCursor.x);
+        std::cout << "GameOver = " << gameOver << std::endl;
     }
 
     void PrintVictory(int *position1, int *position2, int *position3)

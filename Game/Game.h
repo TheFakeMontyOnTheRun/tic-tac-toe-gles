@@ -23,8 +23,8 @@ namespace odb {
 
         void contrainCursorOnTable();
         void makeCPUMove();
-        void checkEndGameConditions();
-        bool returnColVictory(int col);
+        void checkEndGameConditions(enum EPieces);
+        bool returnVictory(int row, int col);
     public:
         Game();
         void printStatus();
