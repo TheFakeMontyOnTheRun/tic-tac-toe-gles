@@ -29,3 +29,8 @@
 *.app
 game.html
 game.js
+.vscode/.BROWSE.VC.DB
+.vscode/.BROWSE.VC.DB-shm
+.vscode/.BROWSE.VC.DB-wal
+.vscode/launch.json
+.vscode/.BROWSE.VC.DB
