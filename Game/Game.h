@@ -20,11 +20,13 @@ namespace odb {
         Vec2i mCursor;
         EPieces mPlayerTeam = EPieces::kCircle;
         bool gameOver = false;
+        int lastRow = 0;
+        int lastCol = 0;
 
         void contrainCursorOnTable();
         void makeCPUMove();
-        void checkEndGameConditions(enum EPieces);
-        bool returnVictory(int row, int col);
+        void checkEndGameConditions(EPieces piece);
+        bool returnVictory(int row, int col, EPieces piece);
     public:
         Game();
         void printStatus();
