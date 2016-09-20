@@ -27,6 +27,7 @@ namespace odb {
         void makeCPUMove();
         void checkEndGameConditions(EPieces piece);
         bool returnVictory(int row, int col, EPieces piece);
+        EPieces pieceFromChar( char slot );
     public:
         Game();
         void printStatus();
@@ -35,6 +36,7 @@ namespace odb {
         void moveDown();
         void moveRight();
         void setPieceOnSlot();
+        void setGameState( char slot[9]);
     };
 }
 #endif //TIC_TAC_TOE_GLES_GAME_H
