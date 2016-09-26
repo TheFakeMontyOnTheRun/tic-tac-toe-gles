@@ -195,7 +195,7 @@ event_loop(Display *dpy, Window win,
 }
 
 if ( redraw ) {
-         draw();
+         draw( game );
          eglSwapBuffers(egl_dpy, egl_surf);
 }
 

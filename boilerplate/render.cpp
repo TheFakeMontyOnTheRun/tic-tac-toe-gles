@@ -40,7 +40,8 @@
 odb::GLES2Lesson* gles2Lesson = nullptr;
 std::shared_ptr<odb::Scene> scene;
 
-extern void draw() {
+
+extern void draw(odb::Game& game) {
 
 	if ( gles2Lesson != nullptr ) {
 		gles2Lesson->tick();

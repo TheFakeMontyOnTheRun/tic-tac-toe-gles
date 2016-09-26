@@ -134,7 +134,7 @@ extern void
 event_loop(Display *dpy, Window win,
            EGLDisplay egl_dpy, EGLSurface egl_surf, odb::Game& game)
 {
-         draw();
+         draw( game );
          eglSwapBuffers(egl_dpy, egl_surf);
 }
 
