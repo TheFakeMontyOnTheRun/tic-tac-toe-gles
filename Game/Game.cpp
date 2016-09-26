@@ -184,4 +184,12 @@ namespace odb {
 
         return EPieces::kBlank;
     }
+
+    Game::EPieces Game::getPieceAt( int x, int y ) {
+        return mTable[ y ][ x ];
+    }
+
+    bool Game::isCursorAt( int x, int y ) {
+        return mCursor.x == x && mCursor.y == y;
+    }
 }
