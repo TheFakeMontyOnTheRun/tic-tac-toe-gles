@@ -1,7 +1,7 @@
 #ifndef GLUE_H
 #define GLUE_H
 
-extern void draw();
+extern void draw(odb::Game& game);
 
 /* new window size or exposure */
 extern void reshape(int width, int height);

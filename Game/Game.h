@@ -7,10 +7,11 @@
 
 namespace odb {
     class Game {
+    public:
         enum EPieces {
             kBlank, kCircle, kCross
         };
-
+    private:
         struct Vec2i {
             int x = 0;
             int y = 0;
@@ -37,6 +38,8 @@ namespace odb {
         void moveRight();
         void setPieceOnSlot();
         void setGameState( char slot[9]);
+        EPieces getPieceAt( int x, int y );
+        bool isCursorAt( int x, int y );
     };
 }
 #endif //TIC_TAC_TOE_GLES_GAME_H
