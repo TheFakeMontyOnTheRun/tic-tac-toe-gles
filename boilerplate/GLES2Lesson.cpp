@@ -11,7 +11,9 @@
 #include <string.h>
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
-
+#include <memory>
+#include <vector>
+#include <map>
 #include <GLES2/gl2.h>
 #include <EGL/egl.h>
 
@@ -25,6 +27,15 @@
 
 
 #include <string>
+
+#include "NativeBitmap.h"
+#include "Texture.h"
+#include "Material.h"
+#include "Trig.h"
+#include "TrigBatch.h"
+#include "MeshObject.h"
+#include "MaterialList.h"
+#include "Scene.h"
 
 #include "GLES2Lesson.h"
 
@@ -368,41 +379,41 @@ namespace odb {
 	    prepareShaderProgram();
 	    setPerspective();
 
-	    drawGeometry(vboCubeVertexDataIndex,
-	                 vboCubeVertexIndicesIndex,
-	                 36,
-	                 resetTransformMatrices(glm::vec3(2.0f, 0.0f, -6.0f))
-	    );
-
-
-	    drawGeometry(vboCubeVertexDataIndex,
-	                 vboCubeVertexIndicesIndex,
-	                 36,
-	                 glm::translate(glm::mat4(1.0f),
-	                                glm::vec3(-2.0f, -2.0f, -10.0f))//cubeTransformMatrix
-	    );
-
-	    drawGeometry(vboCubeVertexDataIndex,
-	                 vboCubeVertexIndicesIndex,
-	                 36,
-	                 glm::translate(glm::mat4(1.0f),
-	                                glm::vec3(2.0f, -2.0f, -10.0f))//cubeTransformMatrix
-	    );
-
-
-	    drawGeometry(vboCubeVertexDataIndex,
-	                 vboCubeVertexIndicesIndex,
-	                 36,
-	                 glm::translate(glm::mat4(1.0f),
-	                                glm::vec3(2.0f, -2.0f, -4.0f))//cubeTransformMatrix
-	    );
-
-	    drawGeometry(vboCubeVertexDataIndex,
-	                 vboCubeVertexIndicesIndex,
-	                 36,
-	                 glm::translate(glm::mat4(1.0f),
-	                                glm::vec3(-2.0f, 2.0f, -5.0f))//cubeTransformMatrix
-	    );
+//	    drawGeometry(vboCubeVertexDataIndex,
+//	                 vboCubeVertexIndicesIndex,
+//	                 36,
+//	                 resetTransformMatrices(glm::vec3(2.0f, 0.0f, -6.0f))
+//	    );
+//
+//
+//	    drawGeometry(vboCubeVertexDataIndex,
+//	                 vboCubeVertexIndicesIndex,
+//	                 36,
+//	                 glm::translate(glm::mat4(1.0f),
+//	                                glm::vec3(-2.0f, -2.0f, -10.0f))//cubeTransformMatrix
+//	    );
+//
+//	    drawGeometry(vboCubeVertexDataIndex,
+//	                 vboCubeVertexIndicesIndex,
+//	                 36,
+//	                 glm::translate(glm::mat4(1.0f),
+//	                                glm::vec3(2.0f, -2.0f, -10.0f))//cubeTransformMatrix
+//	    );
+//
+//
+//	    drawGeometry(vboCubeVertexDataIndex,
+//	                 vboCubeVertexIndicesIndex,
+//	                 36,
+//	                 glm::translate(glm::mat4(1.0f),
+//	                                glm::vec3(2.0f, -2.0f, -4.0f))//cubeTransformMatrix
+//	    );
+//
+//	    drawGeometry(vboCubeVertexDataIndex,
+//	                 vboCubeVertexIndicesIndex,
+//	                 36,
+//	                 glm::translate(glm::mat4(1.0f),
+//	                                glm::vec3(-2.0f, 2.0f, -5.0f))//cubeTransformMatrix
+//	    );
 
     }
 
@@ -469,4 +480,31 @@ namespace odb {
 	    rotationXZSpeed = -velocity.x;
 	    rotationYZSpeed = -velocity.y;
     }
+
+	void GLES2Lesson::drawTrigBatch( odb::TrigBatch &batch ) {
+		clearBuffers();
+		prepareShaderProgram();
+		setPerspective();
+
+		glm::mat4 trans = resetTransformMatrices(glm::vec3(0.0f, 0.0f, -6.0f));
+                //glm::rotate( glm::translate( glm::mat4(1.0f), glm::vec3( 0.0f, 0.0f, -5.0f ) ), cubeRotationAngleXZ, glm::vec3( 0.0f, 1.0f, 0.0f ) );
+
+		glUniformMatrix4fv(modelMatrixAttributePosition, 1, false, &trans[0][0]);
+		checkGlError("before drawing");
+
+        glEnableVertexAttribArray(vertexAttributePosition);
+        glEnableVertexAttribArray(textureCoordinatesAttributePosition);
+        glEnableVertexAttribArray(normalAttributePosition);
+        glEnableVertexAttribArray(tangentVectorShaderPosition);
+
+
+        glUniform4fv(ambientLightColorShaderLocation, 1, &ambientLightColor[0]);
+    	batch.draw(vertexAttributePosition, textureCoordinatesAttributePosition, normalAttributePosition , tangentVectorShaderPosition);
+
+		glDisableVertexAttribArray(vertexAttributePosition);
+		glDisableVertexAttribArray(textureCoordinatesAttributePosition);
+        glDisableVertexAttribArray(normalAttributePosition);
+        glDisableVertexAttribArray(tangentVectorShaderPosition);
+
+	}
 }
