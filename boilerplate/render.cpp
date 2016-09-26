@@ -5,34 +5,56 @@
 #include <string.h>
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
+#include <GLES2/gl2.h>
+#include <EGL/egl.h>
+#include <memory>
 #include <array>
+#include <vector>
 #include <iostream>
 #include <string>
 #include <fstream>
 #include <streambuf>
 #include <iterator>
 #include <fstream>
-#include <GLES2/gl2.h>
-#include <EGL/egl.h>
+#include <map>
+#include "glm/glm.hpp"
 
 #include <png.h>
 
-
-#include <map>
-#include "glm/glm.hpp"
 #include "Game.h"
 #include "glue.h"
 #include "glm/gtc/matrix_transform.hpp"
-#include <iostream>
+
+#include "NativeBitmap.h"
+#include "Texture.h"
+#include "Material.h"
+#include "Trig.h"
+#include "TrigBatch.h"
+#include "MeshObject.h"
+#include "MaterialList.h"
+#include "Scene.h"
+
 #include "GLES2Lesson.h"
+#include "WavefrontOBJReader.h"
 
 odb::GLES2Lesson* gles2Lesson = nullptr;
+std::shared_ptr<odb::Scene> scene;
 
 extern void draw() {
+
 	if ( gles2Lesson != nullptr ) {
 		gles2Lesson->tick();
 		gles2Lesson->render();
-	}
+
+        if ( scene != nullptr ) {
+		    auto it = scene->meshObjects.begin();
+		    while ( it != scene->meshObjects.end() ) {
+			    std::shared_ptr<odb::MeshObject> mesh = it->second;
+			    gles2Lesson->drawTrigBatch( mesh->trigBatches[0] );
+			    it = std::next( it );
+		    }
+	    }
+    }
 }
 
 /* new window size or exposure */
@@ -44,7 +66,7 @@ static void
 create_shaders(void) {
 }
 
-std::string readShaderFrom( std::string path ) {
+std::string readTextFrom(std::string path) {
     std::ifstream file( path );
     std::string toReturn((std::istreambuf_iterator<char>(file)),
                          std::istreambuf_iterator<char>());
@@ -124,10 +146,13 @@ int* loadPNG(const std::string filename, int width, int height)
 
 extern void init() {
 
-	std::string gFragmentShader = readShaderFrom( "res/fragment.glsl" );
-    std::string gVertexShader = readShaderFrom( "res/vertex.glsl" );
+	std::string gFragmentShader = readTextFrom("res/fragment.glsl");
+    std::string gVertexShader = readTextFrom("res/vertex.glsl");
+
+    scene = readScene( readTextFrom("res/cubonormal.obj"), readTextFrom("res/cubonormal.mtl"));
 
 	gles2Lesson = new odb::GLES2Lesson();
-    gles2Lesson->setTexture( loadPNG( "res/texture.png", 128, 128 ), loadPNG( "res/hexa.png", 128, 128 ), 128, 128, 1);
+    gles2Lesson->setTexture( loadPNG( "res/cubecolours.png", 128, 128 ), loadPNG( "res/cubenormals.png", 128, 128 ), 128, 128, 1);
+    gles2Lesson->setSpeeds( glm::vec2( 1.0f * (3.14159f / 180.0f), 0.0f * (3.14159f / 180.0f)) );
 	gles2Lesson->init(300, 300, gVertexShader.c_str(), gFragmentShader.c_str());
 }
