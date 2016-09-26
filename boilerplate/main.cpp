@@ -22,6 +22,11 @@ odb::Game game;
 
 
 extern "C" {
+    int int_sqrt(int x) {
+        std::cout << "JS->C++" << std::endl;
+        return sqrt(x);
+    }
+
   EM_BOOL keydown_callback(int eventType, const EmscriptenKeyboardEvent *e, void *userData) {
 
 	std::string code = e->code;
@@ -49,6 +54,13 @@ extern "C" {
 	if ( code == "KeyZ") {
 		game.setPieceOnSlot();
 		game.printStatus();
+
+		EM_ASM (
+		    alert( 'bla' );
+		    int_sqrt = Module.cwrap('int_sqrt', 'number', ['number']);
+            int_sqrt(12);
+            int_sqrt(28);
+		);
 	}
 
 	return true;

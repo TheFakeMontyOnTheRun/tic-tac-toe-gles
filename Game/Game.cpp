@@ -158,4 +158,30 @@ namespace odb {
 
     }
 
+    void Game::setGameState(char *slot) {
+        mTable[ 0 ][ 0 ] = pieceFromChar( slot[ 0 ] );
+        mTable[ 0 ][ 1 ] = pieceFromChar( slot[ 1 ] );
+        mTable[ 0 ][ 2 ] = pieceFromChar( slot[ 2 ] );
+
+        mTable[ 1 ][ 0 ] = pieceFromChar( slot[ 3 ] );
+        mTable[ 1 ][ 1 ] = pieceFromChar( slot[ 4 ] );
+        mTable[ 1 ][ 2 ] = pieceFromChar( slot[ 5 ] );
+
+        mTable[ 2 ][ 0 ] = pieceFromChar( slot[ 6 ] );
+        mTable[ 2 ][ 1 ] = pieceFromChar( slot[ 7 ] );
+        mTable[ 2 ][ 2 ] = pieceFromChar( slot[ 8 ] );
+    }
+
+    Game::EPieces Game::pieceFromChar(char slot) {
+
+        if ( slot == 'X' ) {
+            return EPieces::kCross;
+        }
+
+        if ( slot == 'O' ) {
+            return EPieces::kCircle;
+        }
+
+        return EPieces::kBlank;
+    }
 }
