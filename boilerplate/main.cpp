@@ -75,7 +75,7 @@ extern "C" {
 #endif
 
 
-	const int winWidth = 300, winHeight = 300;
+	const int winWidth = 640, winHeight = 480;
 
 	Display *x_dpy;
 	Window win;

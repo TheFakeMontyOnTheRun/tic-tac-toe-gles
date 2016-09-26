@@ -154,5 +154,5 @@ extern void init() {
 	gles2Lesson = new odb::GLES2Lesson();
     gles2Lesson->setTexture( loadPNG( "res/cubecolours.png", 128, 128 ), loadPNG( "res/cubenormals.png", 128, 128 ), 128, 128, 1);
     gles2Lesson->setSpeeds( glm::vec2( 1.0f * (3.14159f / 180.0f), 0.0f * (3.14159f / 180.0f)) );
-	gles2Lesson->init(300, 300, gVertexShader.c_str(), gFragmentShader.c_str());
+	gles2Lesson->init(640, 480, gVertexShader.c_str(), gFragmentShader.c_str());
 }
