@@ -481,12 +481,14 @@ namespace odb {
 	    rotationYZSpeed = -velocity.y;
     }
 
-	void GLES2Lesson::drawTrigBatch( odb::TrigBatch &batch ) {
-		clearBuffers();
+	void GLES2Lesson::drawTrigBatch( odb::TrigBatch &batch, glm::vec3 translation, float xzAngle, float yzAngle ) {
 		prepareShaderProgram();
 		setPerspective();
 
-		glm::mat4 trans = resetTransformMatrices(glm::vec3(0.0f, 0.0f, -6.0f));
+		cubeRotationAngleYZ = yzAngle;
+		cubeRotationAngleXZ = xzAngle;
+
+		glm::mat4 trans = resetTransformMatrices(translation);
                 //glm::rotate( glm::translate( glm::mat4(1.0f), glm::vec3( 0.0f, 0.0f, -5.0f ) ), cubeRotationAngleXZ, glm::vec3( 0.0f, 1.0f, 0.0f ) );
 
 		glUniformMatrix4fv(modelMatrixAttributePosition, 1, false, &trans[0][0]);

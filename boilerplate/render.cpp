@@ -41,6 +41,17 @@ odb::GLES2Lesson* gles2Lesson = nullptr;
 std::shared_ptr<odb::Scene> scene;
 
 
+void drawSceneAt( std::shared_ptr<odb::Scene> scene, glm::vec3 translation, float rotationXZ, float rotationYZ ) {
+    if ( scene != nullptr ) {
+        auto it = scene->meshObjects.begin();
+        while ( it != scene->meshObjects.end() ) {
+            std::shared_ptr<odb::MeshObject> mesh = it->second;
+            gles2Lesson->drawTrigBatch( mesh->trigBatches[0], translation, rotationXZ, rotationYZ );
+            it = std::next( it );
+        }
+    }
+}
+
 extern void draw(odb::Game& game) {
 
 	if ( gles2Lesson != nullptr ) {
