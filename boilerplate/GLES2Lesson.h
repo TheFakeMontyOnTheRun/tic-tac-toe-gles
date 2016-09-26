@@ -108,6 +108,8 @@ namespace odb {
         void reset();
 
         void setSpeeds(const glm::vec2 &param);
+
+        void drawTrigBatch( odb::TrigBatch &batch );
     };
 }
 #endif //LESSON02_GLES2LESSON_H
