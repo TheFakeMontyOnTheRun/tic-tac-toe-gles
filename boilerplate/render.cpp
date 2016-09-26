@@ -58,14 +58,26 @@ extern void draw(odb::Game& game) {
 		gles2Lesson->tick();
 		gles2Lesson->render();
 
-        if ( scene != nullptr ) {
-		    auto it = scene->meshObjects.begin();
-		    while ( it != scene->meshObjects.end() ) {
-			    std::shared_ptr<odb::MeshObject> mesh = it->second;
-			    gles2Lesson->drawTrigBatch( mesh->trigBatches[0] );
-			    it = std::next( it );
-		    }
-	    }
+        float rad = 3.14159f / 180.0f;
+
+        for ( int y = 0; y < 3; ++y ) {
+            for ( int x = 0; x < 3; ++x ) {
+                //90 X
+                //270 O
+                odb::Game::EPieces piece = game.getPieceAt( x, y );
+                float rotation = 180.0f;
+                if ( piece == odb::Game::EPieces::kCross ) {
+                    rotation = 90.0f;
+                } else if ( piece == odb::Game::EPieces::kCircle ) {
+                    rotation = 270.0f;
+                } else {
+                    rotation = 180.0f;
+                }
+
+                bool isCursorPosition = game.isCursorAt( x, y );
+                drawSceneAt( scene, glm::vec3( -3 + (3 * x), 3 + (-3 * y), isCursorPosition ? -8 : -10 ), rotation * rad, 0 );
+            }
+        }
     }
 }
 
