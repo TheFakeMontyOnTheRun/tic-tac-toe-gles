@@ -35,3 +35,6 @@ game.js
 .vscode/launch.json
 .vscode/.BROWSE.VC.DB
 game.data
+boilerplate/.vscode/.BROWSE.VC.DB
+*.DB-shm
+boilerplate/.vscode/.BROWSE.VC.DB-wal

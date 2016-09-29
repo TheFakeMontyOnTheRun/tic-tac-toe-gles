@@ -28,6 +28,7 @@ namespace odb {
         void makeCPUMove();
         void checkEndGameConditions(EPieces piece);
         bool returnVictory(int row, int col, EPieces piece);
+        bool returnValidMove();
         EPieces pieceFromChar( char slot );
     public:
         Game();

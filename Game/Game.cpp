@@ -74,8 +74,20 @@ namespace odb {
         contrainCursorOnTable();
     }
 
+    bool Game::returnValidMove()
+    {
+        if (mTable[ mCursor.y ][ mCursor.x ] == EPieces::kBlank)
+            return true;
+        else
+            return false;
+    }
+
     void Game::setPieceOnSlot() {
-        if (!gameOver) {
+        if (gameOver) 
+            return;
+
+        if (returnValidMove())
+        {
             mTable[ mCursor.y ][ mCursor.x ] = mPlayerTeam;
             
             contrainCursorOnTable();

@@ -56,7 +56,6 @@ extern "C" {
 		game.printStatus();
 
 		EM_ASM (
-		    alert( 'bla' );
 		    int_sqrt = Module.cwrap('int_sqrt', 'number', ['number']);
             int_sqrt(12);
             int_sqrt(28);
