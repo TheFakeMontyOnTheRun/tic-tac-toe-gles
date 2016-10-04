@@ -93,9 +93,10 @@ namespace odb {
             contrainCursorOnTable();
             checkEndGameConditions(EPieces::kCircle);
 
-            if (gameOver)
+            if (gameOver) {
                 return;
-            
+            }
+
             makeCPUMove();
             checkEndGameConditions(EPieces::kCross);
         }
@@ -104,10 +105,6 @@ namespace odb {
     void Game::contrainCursorOnTable() {
         mCursor.x = std::min( std::max( 0, mCursor.x), 2 );
         mCursor.y = std::min( std::max( 0, mCursor.y), 2 );
-
-        lastRow = mCursor.y;
-        lastCol = mCursor.x;
-
         printStatus();
     }
 
@@ -120,54 +117,43 @@ namespace odb {
             for (auto& slot : line) {
                 if ( slot == EPieces::kBlank ) {
                     slot = EPieces::kCross;
-                    lastRow = x;
-                    lastCol = y;
 
                     printStatus();
                     return;
                 }
-                y++;
+                x++;
             }
-            x++;
+            y++;
         }
     }
 
-    bool Game::returnVictory(int row, int col, EPieces piece)
+    bool Game::returnVictory(EPieces piece)
     {
-        int pos0 [2];
-        int pos1 [2];
-        int pos2 [2];
+        for ( int c = 0; c < 3; ++c ) {
+            if ((mTable[0][c] == piece) && (mTable[1][c] == piece) && (mTable[2][c] == piece)) {
+                return true;
+            }
 
-        // Check fow Col victory
-        if ((mTable[0][col] == piece) && (mTable[1][col] == piece) && (mTable[2][col] == piece)) {
+            if ((mTable[c][ 0 ] == piece) && (mTable[c][ 1 ] == piece) && (mTable[c][ 2 ] == piece)) {
+                return true;
+            }
+        }
+
+        if ((mTable[0][ 0 ] == piece) && (mTable[1][ 1 ] == piece) && (mTable[2][ 2 ] == piece)) {
             return true;
         }
 
-        // Check fow Row victory
-        if ((mTable[row][0] == piece) && (mTable[row][1] == piece) && (mTable[row][2] == piece)) {
+        if ((mTable[2][ 0 ] == piece) && (mTable[1][ 1 ] == piece) && (mTable[0][ 2 ] == piece)) {
             return true;
         }
-
-        // Check for Diag victory
-        if ((mTable[0][0] == piece) && (mTable[1][1] == piece) && (mTable[2][2] == piece)) {
-            return true;
-        }
-        else if ((mTable[0][2] == piece) && (mTable[1][1] == piece) && (mTable[2][0] == piece)) {
-            return true;
-        }      
 
         return false;
     }
 
     void Game::checkEndGameConditions(EPieces piece) 
     {
-        gameOver = returnVictory(lastRow, lastCol, piece);
+        gameOver = returnVictory(piece);
         std::cout << "GameOver = " << gameOver << std::endl;
-    }
-
-    void PrintVictory(int position1[2], int position2[2], int position3[2])
-    {
-
     }
 
     void Game::setGameState(char *slot) {
