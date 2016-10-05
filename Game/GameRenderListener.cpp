@@ -9,7 +9,7 @@
 #include "GameRenderListener.h"
 
 static const float rad = 3.14159f / 180.0f;
-static const long animationTime = 5000;
+static const long animationTime = 2000;
 static const float zNear = -8;
 static const float zFar = -10;
 static const float degreesForX = 90.0f;
