@@ -18,6 +18,8 @@
 #include <EGL/egl.h>
 
 #include "glm/glm.hpp"
+#include "CAnimation.h"
+#include "GameRenderListener.h"
 #include "Game.h"
 #include "glue.h"
 #include "glm/gtc/matrix_transform.hpp"
@@ -481,17 +483,11 @@ namespace odb {
 	    rotationYZSpeed = -velocity.y;
     }
 
-	void GLES2Lesson::drawTrigBatch( odb::TrigBatch &batch, glm::vec3 translation, float xzAngle, float yzAngle ) {
+	void GLES2Lesson::drawTrigBatch( odb::TrigBatch &batch, glm::mat4 transform ) {
 		prepareShaderProgram();
 		setPerspective();
 
-		cubeRotationAngleYZ = yzAngle;
-		cubeRotationAngleXZ = xzAngle;
-
-		glm::mat4 trans = resetTransformMatrices(translation);
-                //glm::rotate( glm::translate( glm::mat4(1.0f), glm::vec3( 0.0f, 0.0f, -5.0f ) ), cubeRotationAngleXZ, glm::vec3( 0.0f, 1.0f, 0.0f ) );
-
-		glUniformMatrix4fv(modelMatrixAttributePosition, 1, false, &trans[0][0]);
+		glUniformMatrix4fv(modelMatrixAttributePosition, 1, false, &transform[0][0]);
 		checkGlError("before drawing");
 
         glEnableVertexAttribArray(vertexAttributePosition);

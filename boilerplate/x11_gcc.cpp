@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <memory>
 #include <iostream>
 #include <array>
 #include <X11/Xlib.h>
@@ -12,6 +13,9 @@
 #include <GLES2/gl2.h>
 #include <EGL/egl.h>
 #include <iostream>
+#include "glm/glm.hpp"
+#include "CAnimation.h"
+#include "GameRenderListener.h"
 
 #include "Game.h"
 #include "glue.h"

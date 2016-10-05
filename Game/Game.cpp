@@ -3,7 +3,10 @@
 //
 #include <iostream>
 #include <array>
-
+#include <memory>
+#include "glm/glm.hpp"
+#include "CAnimation.h"
+#include "GameRenderListener.h"
 #include "Game.h"
 
 #include <iterator>
@@ -54,24 +57,66 @@ namespace odb {
     }
 
     void Game::moveLeft() {
+
+        defocusPieceAtCursorPosition();
+
         mCursor.x--;
         contrainCursorOnTable();
+
+        focusPieceAtCursorPosition();
+    }
+
+    void Game::focusPieceAtCursorPosition() {
+        if (mRenderListener != nullptr ) {
+            if (getPieceAt(mCursor.x, mCursor.y ) == kCross ) {
+                mRenderListener->onPieceFocusedIsX(mCursor.x, mCursor.y);
+            }   else if (getPieceAt(mCursor.x, mCursor.y ) == kCircle ) {
+                mRenderListener->onPieceFocusedIsO(mCursor.x, mCursor.y);
+            }   else {
+                mRenderListener->onPieceFocusedIsBlank(mCursor.x, mCursor.y);
+            }
+        }
+    }
+
+    void Game::defocusPieceAtCursorPosition() {
+        if (mRenderListener != nullptr ) {
+            if (getPieceAt(mCursor.x, mCursor.y ) == kCross ) {
+                mRenderListener->onPieceDefocusedIsX(mCursor.x, mCursor.y);
+            }   else if (getPieceAt(mCursor.x, mCursor.y ) == kCircle ) {
+                mRenderListener->onPieceDefocusedIsO(mCursor.x, mCursor.y);
+            }   else {
+                mRenderListener->onPieceDefocusedIsBlank(mCursor.x, mCursor.y);
+            }
+        }
     }
 
     void Game::moveUp() {
+        defocusPieceAtCursorPosition();
+
         mCursor.y--;
         contrainCursorOnTable();
 
+        focusPieceAtCursorPosition();
     }
 
     void Game::moveDown() {
+
+        defocusPieceAtCursorPosition();
+
         mCursor.y++;
         contrainCursorOnTable();
+
+        focusPieceAtCursorPosition();
     }
 
     void Game::moveRight() {
+
+        defocusPieceAtCursorPosition();
+
         mCursor.x++;
         contrainCursorOnTable();
+
+        focusPieceAtCursorPosition();
     }
 
     bool Game::returnValidMove()
@@ -89,6 +134,14 @@ namespace odb {
         if (returnValidMove())
         {
             mTable[ mCursor.y ][ mCursor.x ] = mPlayerTeam;
+
+            if ( mRenderListener != nullptr ) {
+                if ( mPlayerTeam == EPieces ::kCross ) {
+                    mRenderListener->onPieceSelectedIsX( mCursor.x, mCursor.y);
+                } else {
+                    mRenderListener->onPieceSelectedIsO( mCursor.x, mCursor.y);
+                }
+            }
             
             contrainCursorOnTable();
             checkEndGameConditions(EPieces::kCircle);
@@ -118,6 +171,8 @@ namespace odb {
                 if ( slot == EPieces::kBlank ) {
                     slot = EPieces::kCross;
 
+                    mRenderListener->onPieceSelectedIsX( x, y);
+                    mRenderListener->onPieceDefocusedIsX(x, y);
                     printStatus();
                     return;
                 }
@@ -189,5 +244,9 @@ namespace odb {
 
     bool Game::isCursorAt( int x, int y ) {
         return mCursor.x == x && mCursor.y == y;
+    }
+
+    void Game::setListener(std::shared_ptr<GameRenderListener> listener) {
+        mRenderListener = listener;
     }
 }

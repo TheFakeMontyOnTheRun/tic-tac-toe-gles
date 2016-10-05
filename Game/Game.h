@@ -27,8 +27,10 @@ namespace odb {
         bool returnVictory(EPieces piece);
         bool returnValidMove();
         EPieces pieceFromChar( char slot );
+        std::shared_ptr<GameRenderListener> mRenderListener;
     public:
         Game();
+        void setListener( std::shared_ptr<GameRenderListener> listener );
         void printStatus();
         void moveLeft();
         void moveUp();
@@ -38,6 +40,10 @@ namespace odb {
         void setGameState( char slot[9]);
         EPieces getPieceAt( int x, int y );
         bool isCursorAt( int x, int y );
+
+        void defocusPieceAtCursorPosition();
+
+        void focusPieceAtCursorPosition();
     };
 }
 #endif //TIC_TAC_TOE_GLES_GAME_H
