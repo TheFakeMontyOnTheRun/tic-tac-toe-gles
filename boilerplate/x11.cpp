@@ -12,6 +12,7 @@
 
 #include <GLES2/gl2.h>
 #include <EGL/egl.h>
+#include "glm/glm.hpp"
 #include "CAnimation.h"
 #include "GameRenderListener.h"
 #include "Game.h"
