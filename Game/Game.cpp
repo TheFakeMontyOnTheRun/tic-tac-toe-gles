@@ -113,7 +113,7 @@ namespace odb {
         int y = 0;
 
         for ( auto& line : mTable ) {
-            y = 0;
+            x = 0;
             for (auto& slot : line) {
                 if ( slot == EPieces::kBlank ) {
                     slot = EPieces::kCross;
