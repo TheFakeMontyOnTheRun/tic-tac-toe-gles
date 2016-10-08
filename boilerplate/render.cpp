@@ -20,6 +20,8 @@
 #include "glm/glm.hpp"
 
 #include <png.h>
+#include "CAnimation.h"
+#include "GameRenderListener.h"
 
 #include "Game.h"
 #include "glue.h"
@@ -37,45 +39,35 @@
 #include "GLES2Lesson.h"
 #include "WavefrontOBJReader.h"
 
+
 odb::GLES2Lesson* gles2Lesson = nullptr;
 std::shared_ptr<odb::Scene> scene;
+std::shared_ptr<odb::GameRenderListener> renderListener = std::make_shared<odb::GameRenderListener>();
 
-
-void drawSceneAt( std::shared_ptr<odb::Scene> scene, glm::vec3 translation, float rotationXZ, float rotationYZ ) {
+void drawSceneAt( std::shared_ptr<odb::Scene> scene, glm::mat4 transform ) {
     if ( scene != nullptr ) {
         auto it = scene->meshObjects.begin();
         while ( it != scene->meshObjects.end() ) {
             std::shared_ptr<odb::MeshObject> mesh = it->second;
-            gles2Lesson->drawTrigBatch( mesh->trigBatches[0], translation, rotationXZ, rotationYZ );
+            gles2Lesson->drawTrigBatch( mesh->trigBatches[0], transform );
             it = std::next( it );
         }
     }
 }
 
+
+
 extern void draw(odb::Game& game) {
 
 	if ( gles2Lesson != nullptr ) {
 		gles2Lesson->tick();
+        renderListener->update( 200 );
 		gles2Lesson->render();
-
-        float rad = 3.14159f / 180.0f;
+        game.setListener( renderListener );
 
         for ( int y = 0; y < 3; ++y ) {
             for ( int x = 0; x < 3; ++x ) {
-                //90 X
-                //270 O
-                odb::Game::EPieces piece = game.getPieceAt( x, y );
-                float rotation = 180.0f;
-                if ( piece == odb::Game::EPieces::kCross ) {
-                    rotation = 90.0f;
-                } else if ( piece == odb::Game::EPieces::kCircle ) {
-                    rotation = 270.0f;
-                } else {
-                    rotation = 180.0f;
-                }
-
-                bool isCursorPosition = game.isCursorAt( x, y );
-                drawSceneAt( scene, glm::vec3( -3 + (3 * x), 3 + (-3 * y), isCursorPosition ? -8 : -10 ), rotation * rad, 0 );
+                drawSceneAt( scene, renderListener->getStateFor( x, y ) );
             }
         }
     }

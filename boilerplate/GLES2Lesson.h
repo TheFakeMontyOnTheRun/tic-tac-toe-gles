@@ -109,7 +109,7 @@ namespace odb {
 
         void setSpeeds(const glm::vec2 &param);
 
-        void drawTrigBatch( odb::TrigBatch &batch, glm::vec3 translation, float xzAngle, float yzAngle );
+        void drawTrigBatch( odb::TrigBatch &batch, glm::mat4 transform );
     };
 }
 #endif //LESSON02_GLES2LESSON_H
