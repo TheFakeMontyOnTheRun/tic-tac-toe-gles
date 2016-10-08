@@ -54,16 +54,11 @@ namespace odb {
 	    GLint diffuseLightPosition;
         GLuint gProgram;
 
-        GLuint textureId;
-	    GLuint normalMapId;
         //VBO stuff
         GLuint vboCubeVertexDataIndex;
         GLuint vboCubeVertexIndicesIndex;
 
-        int *textureData;
-        int *normals;
-        int textureWidth;
-        int textureHeight;
+
         GLuint currentFilter;
         float cubeRotationAngleYZ;
         float cubeRotationAngleXZ;
@@ -77,7 +72,11 @@ namespace odb {
 
         float rotationXZSpeed;
         float rotationYZSpeed;
-    public:
+
+		std::vector<std::shared_ptr<NativeBitmap>> mBitmaps;
+		std::vector<std::shared_ptr<Texture>> mTextures;
+
+	public:
         GLES2Lesson();
 
         ~GLES2Lesson();
@@ -85,7 +84,9 @@ namespace odb {
         bool init(float w, float h, const std::string &vertexShader,
                   const std::string &fragmentShader);
 
-        void setTexture(int *bitmapData, int *normalData, int width, int height, int format);
+		void setTexture(std::vector<std::shared_ptr<NativeBitmap>> textures);
+
+		void setTexture(int *bitmapData, int *normalData, int width, int height, int format);
 
         void render();
 
@@ -109,7 +110,7 @@ namespace odb {
 
         void setSpeeds(const glm::vec2 &param);
 
-        void drawTrigBatch( odb::TrigBatch &batch, glm::mat4 transform );
+        void drawTrigBatch( odb::TrigBatch &batch, glm::mat4 transform, int textureIndex, int normalIndex );
     };
 }
 #endif //LESSON02_GLES2LESSON_H

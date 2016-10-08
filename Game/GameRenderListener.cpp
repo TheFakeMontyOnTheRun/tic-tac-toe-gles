@@ -39,6 +39,10 @@ namespace odb {
                 }
             }
         }
+
+        if (outcomeAnimation != nullptr ) {
+            outcomeAnimation->update(200);
+        }
     }
 
     glm::mat4 GameRenderListener::getStateFor( int x, int y ) {
@@ -107,5 +111,27 @@ namespace odb {
         } else {
             animations[ y ][ x ] = animation;
         }
+    }
+
+    void GameRenderListener::onXVictory() {
+        glm::mat4 transform0 = makeTransform( glm::vec3( 0.0f, 5.0f, -5.0f ), 0, 0 );
+        glm::mat4 transform1 = makeTransform( glm::vec3( 0.0f, 0.0f, -5.0f ), 0, 0 );
+        outcomeAnimation = std::make_shared<odb::CAnimation>( transform0, transform1, animationTime );
+    }
+
+    void GameRenderListener::onOVictory() {
+        glm::mat4 transform0 = makeTransform( glm::vec3( 0.0f, -5.0f, -5.0f ), 0, 0 );
+        glm::mat4 transform1 = makeTransform( glm::vec3( 0.0f, 0.0f, -5.0f ), 0, 0 );
+        outcomeAnimation = std::make_shared<odb::CAnimation>( transform0, transform1, animationTime );
+    }
+
+    void GameRenderListener::onDrawOutcome() {
+        glm::mat4 transform0 = makeTransform( glm::vec3( 0.0f, 0.0f, 5.0f ), 0, 0 );
+        glm::mat4 transform1 = makeTransform( glm::vec3( 0.0f, 0.0f, -5.0f ), 0, 0 );
+        outcomeAnimation = std::make_shared<odb::CAnimation>( transform0, transform1, animationTime );
+    }
+
+    glm::mat4 GameRenderListener::getOutcomeState() {
+        return outcomeAnimation->getCurrentState();
     }
 }

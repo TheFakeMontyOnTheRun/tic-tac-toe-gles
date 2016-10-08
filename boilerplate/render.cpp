@@ -41,18 +41,39 @@
 
 
 odb::GLES2Lesson* gles2Lesson = nullptr;
-std::shared_ptr<odb::Scene> scene;
+
+std::shared_ptr<odb::Scene> cube;
+std::shared_ptr<odb::Scene> choice;
+std::shared_ptr<odb::Scene> drawOutcome;
+std::shared_ptr<odb::Scene> victoryXOutcome;
+std::shared_ptr<odb::Scene> victoryOOutcome;
+std::shared_ptr<odb::Scene> cubeO;
+std::shared_ptr<odb::Scene> cubeX;
+std::shared_ptr<odb::Scene> title;
+
+std::shared_ptr<odb::Scene> outcomeMeshGroup = nullptr;
+
 std::shared_ptr<odb::GameRenderListener> renderListener = std::make_shared<odb::GameRenderListener>();
 
-void drawSceneAt( std::shared_ptr<odb::Scene> scene, glm::mat4 transform ) {
+void drawSceneAt( std::shared_ptr<odb::Scene> scene, glm::mat4 transform, int textureIndex, int normalIndex ) {
     if ( scene != nullptr ) {
-        auto it = scene->meshObjects.begin();
-        while ( it != scene->meshObjects.end() ) {
-            std::shared_ptr<odb::MeshObject> mesh = it->second;
-            gles2Lesson->drawTrigBatch( mesh->trigBatches[0], transform );
-            it = std::next( it );
+        for ( auto& mesh : scene->meshObjects ) {
+            for ( auto& batch : mesh->trigBatches ) {
+                gles2Lesson->drawTrigBatch( batch, transform, textureIndex, normalIndex );
+            }
         }
     }
+}
+
+
+std::string extractTexturefrom( std::shared_ptr<odb::Scene> scene ) {
+    if ( scene != nullptr ) {
+        for ( auto& mesh : scene->meshObjects ) {
+            return mesh->trigBatches[ 0 ].getMaterial()->diffuseMapFilename;
+        }
+    }
+
+    return "res/hexa.png";
 }
 
 
@@ -67,8 +88,14 @@ extern void draw(odb::Game& game) {
 
         for ( int y = 0; y < 3; ++y ) {
             for ( int x = 0; x < 3; ++x ) {
-                drawSceneAt( scene, renderListener->getStateFor( x, y ) );
+                drawSceneAt( cube, renderListener->getStateFor( x, y ), 0, 1 );
             }
+        }
+
+        if ( game.getWinner() != odb::Game::EPieces::kBlank ) {
+            std::shared_ptr<odb::Scene> meshes[] = { drawOutcome, victoryOOutcome, victoryXOutcome };
+
+            drawSceneAt( meshes[static_cast<int>(game.getWinner())], renderListener->getOutcomeState(), 2, 6 );
         }
     }
 }
@@ -91,8 +118,7 @@ std::string readTextFrom(std::string path) {
 }
 
 //https://en.wikibooks.org/wiki/OpenGL_Programming/Intermediate/Textures#A_simple_libpng_example
-int* loadPNG(const std::string filename, int width, int height)
-{
+std::shared_ptr<odb::NativeBitmap> loadPNG(const std::string filename ) {
     //header for testing if it is a png
     png_byte header[8];
 
@@ -131,8 +157,8 @@ int* loadPNG(const std::string filename, int width, int height)
                  NULL, NULL, NULL);
 
     //update width and height based on png info
-    width = twidth;
-    height = theight;
+    int width = twidth;
+    int height = theight;
 
     // Update the png info struct.
     png_read_update_info(png_ptr, info_ptr);
@@ -147,7 +173,7 @@ int* loadPNG(const std::string filename, int width, int height)
     png_bytep *row_pointers = new png_bytep[height];
     // set the individual row_pointers to point at the correct offsets of image_data
     for (int i = 0; i < height; ++i)
-        row_pointers[height - 1 - i] = image_data + i * rowbytes;
+        row_pointers[ i] = image_data + i * rowbytes;
 
     //read the png into image_data through row_pointers
     png_read_image(png_ptr, row_pointers);
@@ -157,7 +183,9 @@ int* loadPNG(const std::string filename, int width, int height)
     delete[] row_pointers;
     fclose(fp);
 
-    return (int*)image_data;
+    std::shared_ptr<odb::NativeBitmap> toReturn = std::make_shared<odb::NativeBitmap>( width, height, (int*)image_data );
+
+    return toReturn;
 }
 
 extern void init() {
@@ -165,10 +193,29 @@ extern void init() {
 	std::string gFragmentShader = readTextFrom("res/fragment.glsl");
     std::string gVertexShader = readTextFrom("res/vertex.glsl");
 
-    scene = readScene( readTextFrom("res/cubonormal.obj"), readTextFrom("res/cubonormal.mtl"));
+    cube = readScene( readTextFrom("res/cubonormal.obj"), readTextFrom("res/cubonormal.mtl"));
+    choice  = readScene( readTextFrom("res/choice.obj"), readTextFrom("res/choice.mtl"));
+    drawOutcome = readScene( readTextFrom("res/draw.obj"), readTextFrom("res/draw.mtl"));
+    victoryXOutcome = readScene( readTextFrom("res/x_victory.obj"), readTextFrom("res/x_victory.mtl"));
+    victoryOOutcome = readScene( readTextFrom("res/o_victory.obj"), readTextFrom("res/o_victory.mtl"));
+    cubeO = readScene( readTextFrom("res/O.obj"), readTextFrom("res/O.mtl"));
+    cubeX = readScene( readTextFrom("res/X.obj"), readTextFrom("res/X.mtl"));
+    title = readScene( readTextFrom("res/title.obj"), readTextFrom("res/title.mtl"));
 
-	gles2Lesson = new odb::GLES2Lesson();
-    gles2Lesson->setTexture( loadPNG( "res/cubecolours.png", 128, 128 ), loadPNG( "res/cubenormals.png", 128, 128 ), 128, 128, 1);
+
+    std::vector< std::shared_ptr<odb::NativeBitmap>> textures;
+
+    textures.push_back( loadPNG( "res/cubecolours.png" ) ); //0
+    textures.push_back( loadPNG( "res/cubenormals.png" ) ); //1
+    textures.push_back( loadPNG( "res/image1.png" ) ); //2
+    textures.push_back( loadPNG( "res/hexa.png" ) ); //3
+    textures.push_back( loadPNG( "res/image2.png" ) ); //4
+    textures.push_back( loadPNG( "res/hexa.png" ) ); //5
+    textures.push_back( loadPNG( "res/image3.png" ) ); //6
+    textures.push_back( loadPNG( "res/hexa.png" ) ); //7
+
+    gles2Lesson = new odb::GLES2Lesson();
+    gles2Lesson->setTexture( textures );
     gles2Lesson->setSpeeds( glm::vec2( 1.0f * (3.14159f / 180.0f), 0.0f * (3.14159f / 180.0f)) );
 	gles2Lesson->init(640, 480, gVertexShader.c_str(), gFragmentShader.c_str());
 }

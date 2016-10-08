@@ -144,14 +144,23 @@ namespace odb {
             }
             
             contrainCursorOnTable();
-            checkEndGameConditions(EPieces::kCircle);
+
+            if ( checkEndGameConditions(EPieces::kCircle) ) {
+                mWinner = EPieces::kCircle;
+                mRenderListener->onOVictory();
+            }
 
             if (gameOver) {
+
                 return;
             }
 
             makeCPUMove();
-            checkEndGameConditions(EPieces::kCross);
+
+            if (checkEndGameConditions(EPieces::kCross) ) {
+                mWinner = EPieces ::kCross;
+                mRenderListener->onXVictory();
+            }
         }
     }
 
@@ -205,9 +214,9 @@ namespace odb {
         return false;
     }
 
-    void Game::checkEndGameConditions(EPieces piece) 
+    bool Game::checkEndGameConditions(EPieces piece)
     {
-        gameOver = returnVictory(piece);
+        return gameOver = returnVictory(piece);
         std::cout << "GameOver = " << gameOver << std::endl;
     }
 
@@ -248,5 +257,9 @@ namespace odb {
 
     void Game::setListener(std::shared_ptr<GameRenderListener> listener) {
         mRenderListener = listener;
+    }
+
+    Game::EPieces Game::getWinner() {
+        return mWinner;
     }
 }
