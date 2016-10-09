@@ -42,20 +42,22 @@
 
 odb::GLES2Lesson* gles2Lesson = nullptr;
 
+
+
 std::shared_ptr<odb::Scene> cube;
 std::shared_ptr<odb::Scene> choice;
 std::shared_ptr<odb::Scene> drawOutcome;
 std::shared_ptr<odb::Scene> victoryXOutcome;
 std::shared_ptr<odb::Scene> victoryOOutcome;
-std::shared_ptr<odb::Scene> cubeO;
-std::shared_ptr<odb::Scene> cubeX;
+std::shared_ptr<odb::Scene> press;
 std::shared_ptr<odb::Scene> title;
 
-std::shared_ptr<odb::Scene> outcomeMeshGroup = nullptr;
 
 std::shared_ptr<odb::GameRenderListener> renderListener = std::make_shared<odb::GameRenderListener>();
 
-void drawSceneAt( std::shared_ptr<odb::Scene> scene, glm::mat4 transform, int textureIndex, int normalIndex ) {
+odb::Game::EPieces playerPiece = odb::Game::EPieces::kBlank;
+
+void drawSceneAt(std::shared_ptr<odb::Scene> scene, glm::mat4 transform, int textureIndex, int normalIndex ) {
     if ( scene != nullptr ) {
         for ( auto& mesh : scene->meshObjects ) {
             for ( auto& batch : mesh->trigBatches ) {
@@ -81,22 +83,43 @@ std::string extractTexturefrom( std::shared_ptr<odb::Scene> scene ) {
 extern void draw(odb::Game& game) {
 
 	if ( gles2Lesson != nullptr ) {
+
 		gles2Lesson->tick();
         renderListener->update( 200 );
 		gles2Lesson->render();
         game.setListener( renderListener );
 
-        for ( int y = 0; y < 3; ++y ) {
-            for ( int x = 0; x < 3; ++x ) {
-                drawSceneAt( cube, renderListener->getStateFor( x, y ), 0, 1 );
+
+        switch ( renderListener->currentVisual ) {
+            case odb::GameRenderListener::EVisuals::kTitleScreen:
+                drawSceneAt( title, glm::translate( glm::mat4(1.0f), glm::vec3( 0.0f, 0.0f, -5.0f ) ), 2, 4 );
+                drawSceneAt( press, glm::translate( glm::mat4(1.0f), glm::vec3( 0.0f, -1.0f, -5.0f ) ), 3, 4 );
+                break;
+
+            case odb::GameRenderListener::EVisuals::kPieceSelection:
+                drawSceneAt( choice, glm::translate( glm::mat4(1.0f), glm::vec3( 0.0f, 1.0f, -5.0f ) ), 2, 4 );
+
+
+                drawSceneAt( cube, renderListener->getStateFor( 0, 1 ), 0, 1 );
+                drawSceneAt( cube, renderListener->getStateFor( 2, 1 ), 0, 1 );
+                break;
+
+            case odb::GameRenderListener::EVisuals::kOutcome: {
+
+                std::shared_ptr<odb::Scene> meshes[] = {drawOutcome, victoryOOutcome, victoryXOutcome};
+                drawSceneAt(meshes[static_cast<int>(game.getWinner())], renderListener->getOutcomeState(), 2, 4);
+                drawSceneAt( press, glm::translate( glm::mat4(1.0f), glm::vec3( 0.0f, -1.0f, -5.0f ) ), 3, 4 );
             }
+
+            case odb::GameRenderListener::EVisuals::kGame:
+                for ( int y = 0; y < 3; ++y ) {
+                    for ( int x = 0; x < 3; ++x ) {
+                        drawSceneAt( cube, renderListener->getStateFor( x, y ), 0, 1 );
+                    }
+                }
+                break;
         }
 
-        if ( game.getWinner() != odb::Game::EPieces::kBlank ) {
-            std::shared_ptr<odb::Scene> meshes[] = { drawOutcome, victoryOOutcome, victoryXOutcome };
-
-            drawSceneAt( meshes[static_cast<int>(game.getWinner())], renderListener->getOutcomeState(), 2, 6 );
-        }
     }
 }
 
@@ -198,8 +221,7 @@ extern void init() {
     drawOutcome = readScene( readTextFrom("res/draw.obj"), readTextFrom("res/draw.mtl"));
     victoryXOutcome = readScene( readTextFrom("res/x_victory.obj"), readTextFrom("res/x_victory.mtl"));
     victoryOOutcome = readScene( readTextFrom("res/o_victory.obj"), readTextFrom("res/o_victory.mtl"));
-    cubeO = readScene( readTextFrom("res/O.obj"), readTextFrom("res/O.mtl"));
-    cubeX = readScene( readTextFrom("res/X.obj"), readTextFrom("res/X.mtl"));
+    press = readScene( readTextFrom("res/press.obj"), readTextFrom("res/press.mtl"));
     title = readScene( readTextFrom("res/title.obj"), readTextFrom("res/title.mtl"));
 
 
@@ -208,11 +230,8 @@ extern void init() {
     textures.push_back( loadPNG( "res/cubecolours.png" ) ); //0
     textures.push_back( loadPNG( "res/cubenormals.png" ) ); //1
     textures.push_back( loadPNG( "res/image1.png" ) ); //2
-    textures.push_back( loadPNG( "res/hexa.png" ) ); //3
     textures.push_back( loadPNG( "res/image2.png" ) ); //4
-    textures.push_back( loadPNG( "res/hexa.png" ) ); //5
     textures.push_back( loadPNG( "res/image3.png" ) ); //6
-    textures.push_back( loadPNG( "res/hexa.png" ) ); //7
 
     gles2Lesson = new odb::GLES2Lesson();
     gles2Lesson->setTexture( textures );

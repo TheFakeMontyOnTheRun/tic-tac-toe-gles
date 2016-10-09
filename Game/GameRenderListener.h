@@ -12,6 +12,10 @@ namespace odb {
 
         std::shared_ptr<odb::CAnimation> outcomeAnimation = nullptr;
     public:
+        enum class EVisuals{ kTitleScreen, kPieceSelection, kGame, kOutcome };
+        EVisuals currentVisual = EVisuals::kTitleScreen;
+
+
         void onPieceSelectedIsX( int x, int y );
         void onPieceSelectedIsO( int x, int y );
         void onPieceFocusedIsX( int x, int y );
@@ -25,7 +29,8 @@ namespace odb {
         void onXVictory();
         void onOVictory();
         void onDrawOutcome();
-
+        void onPieceSelected();
+        void onGameStart();
 
         void update( long delta );
         glm::mat4 getStateFor( int x, int y );

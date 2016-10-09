@@ -20,6 +20,7 @@ namespace odb {
         std::array<std::array<EPieces, 3>, 3> mTable;
         Vec2i mCursor;
         EPieces mPlayerTeam = EPieces::kCircle;
+        EPieces mAdversaryTeam = EPieces::kCross;
         bool gameOver = false;
         void contrainCursorOnTable();
         void makeCPUMove();
@@ -47,6 +48,8 @@ namespace odb {
         void focusPieceAtCursorPosition();
 
         EPieces mWinner = EPieces::kBlank;
+
+        void resetTable();
     };
 }
 #endif //TIC_TAC_TOE_GLES_GAME_H
