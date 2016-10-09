@@ -24,7 +24,6 @@ odb::Game game;
 #include <emscripten.h>
 #include <emscripten/html5.h>
 
-
 extern "C" {
     int int_sqrt(int x) {
         std::cout << "JS->C++" << std::endl;
@@ -169,7 +168,15 @@ int main(int argc, char *argv[]) {
 	}else{	
 		std::cout << "up not ok" << std::endl;
 	}
-      emscripten_set_main_loop( gameLoopTick, 30, 1 );
+
+	EmscriptenFullscreenStrategy s;
+      memset(&s, 0, sizeof(s));
+      s.scaleMode = EMSCRIPTEN_FULLSCREEN_SCALE_ASPECT;
+      s.canvasResolutionScaleMode = EMSCRIPTEN_FULLSCREEN_CANVAS_SCALE_NONE;
+      s.filteringMode = EMSCRIPTEN_FULLSCREEN_FILTERING_DEFAULT;
+    EMSCRIPTEN_RESULT ret = emscripten_enter_soft_fullscreen(0, &s);
+
+      emscripten_set_main_loop( gameLoopTick, 60, 1 );
 #else
 	event_loop(x_dpy, win, egl_dpy, egl_surf, game);
 #endif

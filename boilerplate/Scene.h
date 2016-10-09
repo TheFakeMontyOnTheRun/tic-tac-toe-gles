@@ -8,7 +8,7 @@
 namespace odb {
 	class Scene {
 	public:
-		std::map< std::string, std::shared_ptr<MeshObject>> meshObjects;
+		std::vector<std::shared_ptr<MeshObject>> meshObjects;
 		MaterialList materialList;
 	};
 }

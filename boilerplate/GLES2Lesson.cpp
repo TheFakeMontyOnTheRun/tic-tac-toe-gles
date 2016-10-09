@@ -107,22 +107,26 @@ namespace odb {
 
     const glm::vec4 GLES2Lesson::ambientLightOffColor = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
 
-    GLuint uploadTextureData(int *pixels, int width, int height) {
-	    // Texture object handle
-	    GLuint textureId = 0;
+	unsigned int uploadTextureData(std::shared_ptr<NativeBitmap> bitmap) {
+		// Texture object handle
+		unsigned int textureId = 0;
 
-	    //Generate texture storage
-	    glGenTextures(1, &textureId);
+		//Generate texture storage
+		glGenTextures(1, &textureId);
 
-	    //specify what we want for that texture
-	    glBindTexture(GL_TEXTURE_2D, textureId);
+		//specify what we want for that texture
+		glBindTexture(GL_TEXTURE_2D, textureId);
 
-	    //upload the data
-	    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE,
-	                 pixels);
+		//upload the data
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, bitmap->getWidth(), bitmap->getHeight(), 0, GL_RGBA,
+					 GL_UNSIGNED_BYTE, bitmap->getPixelData());
 
-	    return textureId;
-    }
+		// Set the filtering mode - surprisingly, this is needed.
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+		return textureId;
+	}
 
 
     extern void printGLString(const char *name, GLenum s) {
@@ -210,7 +214,6 @@ namespace odb {
 //start off as identity - late we will init it with proper values.
 	    cubeTransformMatrix = glm::mat4(1.0f);
 	    projectionMatrix = glm::mat4(1.0f);
-	    textureData = nullptr;
 	    vertexAttributePosition = 0;
 	    modelMatrixAttributePosition = 0;
 	    projectionMatrixAttributePosition = 0;
@@ -225,8 +228,6 @@ namespace odb {
 
     GLES2Lesson::~GLES2Lesson() {
 	    deleteVBOs();
-	    glDeleteTextures(1, &textureId);
-	    glDeleteTextures(1, &normalMapId);
     }
 
     bool GLES2Lesson::init(float w, float h, const std::string &vertexShader,
@@ -250,10 +251,9 @@ namespace odb {
 
 	    createVBOs();
 
-	    glActiveTexture(GL_TEXTURE0);
-	    textureId = uploadTextureData(textureData, textureWidth, textureHeight);
-	    glActiveTexture(GL_TEXTURE1);
-	    normalMapId = uploadTextureData(normals, textureWidth, textureHeight);
+		for (auto &bitmap : mBitmaps) {
+			mTextures.push_back(std::make_shared<Texture>(uploadTextureData(bitmap), bitmap));
+		}
 
 	    glEnable(GL_DEPTH_TEST);
 	    glDepthFunc(GL_LEQUAL);
@@ -370,10 +370,6 @@ namespace odb {
 	    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, currentFilter);
 	    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, currentFilter);
 
-	    glUniform1i(normalMapUniformPosition, 1);
-	    glActiveTexture(GL_TEXTURE1);
-	    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, currentFilter);
-	    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, currentFilter);
     }
 
     void GLES2Lesson::render() {
@@ -419,13 +415,10 @@ namespace odb {
 
     }
 
-    void GLES2Lesson::setTexture(int *bitmapData, int *normalData, int width, int height,
-                                 int format) {
-	    textureData = bitmapData;
-	    normals = normalData;
-	    textureWidth = width;
-	    textureHeight = height;
-    }
+	void GLES2Lesson::setTexture(std::vector<std::shared_ptr<NativeBitmap>> textures) {
+		mBitmaps.clear();
+		mBitmaps.insert(mBitmaps.end(), textures.begin(), textures.end());
+	}
 
     void GLES2Lesson::tick() {
 	    cubeRotationAngleYZ += rotationYZSpeed;
@@ -433,7 +426,6 @@ namespace odb {
     }
 
     void GLES2Lesson::shutdown() {
-	    delete textureData;
 	    LOGI("Shutdown!\n");
     }
 
@@ -483,9 +475,17 @@ namespace odb {
 	    rotationYZSpeed = -velocity.y;
     }
 
-	void GLES2Lesson::drawTrigBatch( odb::TrigBatch &batch, glm::mat4 transform ) {
+	void GLES2Lesson::drawTrigBatch( odb::TrigBatch &batch, glm::mat4 transform, int textureIndex, int normalIndex ) {
 		prepareShaderProgram();
 		setPerspective();
+
+        glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, mTextures[ textureIndex ]->mTextureId );
+        glActiveTexture(GL_TEXTURE1);
+        glBindTexture(GL_TEXTURE_2D, mTextures[ normalIndex ]->mTextureId );
+
+        glUniform1i(samplerUniformPosition, 0);
+        glUniform1i(normalMapUniformPosition, 1);
 
 		glUniformMatrix4fv(modelMatrixAttributePosition, 1, false, &transform[0][0]);
 		checkGlError("before drawing");
@@ -497,7 +497,7 @@ namespace odb {
 
 
         glUniform4fv(ambientLightColorShaderLocation, 1, &ambientLightColor[0]);
-    	batch.draw(vertexAttributePosition, textureCoordinatesAttributePosition, normalAttributePosition , tangentVectorShaderPosition);
+    	batch.draw(vertexAttributePosition, textureCoordinatesAttributePosition, normalAttributePosition, tangentVectorShaderPosition );
 
 		glDisableVertexAttribArray(vertexAttributePosition);
 		glDisableVertexAttribArray(textureCoordinatesAttributePosition);

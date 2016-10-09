@@ -28,6 +28,9 @@
 #include "WavefrontOBJReader.h"
 
 std::vector<std::string> consolidateLines(std::vector<char> vector);
+std::vector< glm::vec3 > vertices;
+std::vector< glm::vec3 > normals;
+std::vector< glm::vec2 > uvs;
 
 float floatFrom(std::string str) {
 	std::istringstream buffer(str);
@@ -149,9 +152,6 @@ std::shared_ptr<odb::MeshObject> readObjectFrom( std::vector<std::string>::itera
 	std::shared_ptr<odb::MeshObject> toReturn = std::make_shared<odb::MeshObject>();
 
 	std::map< std::string, std::function<void(std::vector<std::string>)>> meshTokenHandlers;
-	std::vector< glm::vec3 > vertices;
-    std::vector< glm::vec3 > normals;
-	std::vector< glm::vec2 > uvs;
 	std::vector< odb::Trig > trigsInThisBatch;
 	std::shared_ptr<odb::Material> currentMaterial;
 
@@ -238,6 +238,11 @@ std::shared_ptr<odb::MeshObject> readObjectFrom( std::vector<std::string>::itera
 
 	while ( line != end ) {
 		std::string stringLine = *line;
+
+		if ( stringLine.length() == 0 ) {
+			++line;
+			continue;
+		}
 
 		if ( stringLine[ 0 ] == 'o' ) {
 			return toReturn;
@@ -365,11 +370,11 @@ void populateSceneWith( std::string meshData, std::shared_ptr<odb::Scene> scene 
 
 		std::string stringLine = *it;
 
-		if ( stringLine[ 0 ] ==  'o' ) {
+		if ( stringLine[ 0 ] ==  'o' || stringLine[ 0 ] ==  'g' ) {
 			std::string id = stringLine;
 			++it;
 			auto object = readObjectFrom( it, end, scene->materialList );
-			scene->meshObjects[ id ] = object;
+			scene->meshObjects.push_back( object );
 		} else {
 			++it;
 		}
@@ -379,6 +384,11 @@ void populateSceneWith( std::string meshData, std::shared_ptr<odb::Scene> scene 
 
 
 std::shared_ptr<odb::Scene> readScene(std::string objFileContents, std::string materialFileContents) {
+
+	vertices.clear();
+	normals.clear();
+	uvs.clear();
+
 
 	std::shared_ptr<odb::Scene> scene = std::make_shared<odb::Scene>();
 	scene->materialList = readMaterialsFrom(materialFileContents);

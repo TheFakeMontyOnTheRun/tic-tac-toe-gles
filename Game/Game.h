@@ -20,16 +20,18 @@ namespace odb {
         std::array<std::array<EPieces, 3>, 3> mTable;
         Vec2i mCursor;
         EPieces mPlayerTeam = EPieces::kCircle;
+        EPieces mAdversaryTeam = EPieces::kCross;
         bool gameOver = false;
         void contrainCursorOnTable();
         void makeCPUMove();
-        void checkEndGameConditions(EPieces piece);
+        bool checkEndGameConditions(EPieces piece);
         bool returnVictory(EPieces piece);
         bool returnValidMove();
         EPieces pieceFromChar( char slot );
         std::shared_ptr<GameRenderListener> mRenderListener;
     public:
         Game();
+        EPieces getWinner();
         void setListener( std::shared_ptr<GameRenderListener> listener );
         void printStatus();
         void moveLeft();
@@ -44,6 +46,10 @@ namespace odb {
         void defocusPieceAtCursorPosition();
 
         void focusPieceAtCursorPosition();
+
+        EPieces mWinner = EPieces::kBlank;
+
+        void resetTable();
     };
 }
 #endif //TIC_TAC_TOE_GLES_GAME_H

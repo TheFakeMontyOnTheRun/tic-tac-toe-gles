@@ -18,7 +18,7 @@
 
 namespace odb {
 	void TrigBatch::draw(GLuint vertexAttributePosition,
-	                     GLuint textureCoordinatesAttributePosition, GLuint normalAttributePosition, GLuint tangentVectorShaderPosition) {
+	                     GLuint textureCoordinatesAttributePosition , GLuint normalAttributePosition, GLuint tangentVectorShaderPosition) {
 
 		glVertexAttribPointer(vertexAttributePosition, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float),
 		                      vertex);
@@ -86,5 +86,9 @@ namespace odb {
 			uv[uvIndex++] = trig.t2.y;
 			++vertexCount;
 		}
+	}
+
+	std::shared_ptr<Material> TrigBatch::getMaterial() {
+		return material;
 	}
 }
