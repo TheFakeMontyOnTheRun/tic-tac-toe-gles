@@ -39,6 +39,10 @@
 #include "GLES2Lesson.h"
 #include "WavefrontOBJReader.h"
 
+#include "SoundClip.h"
+#include "SoundListener.h"
+#include "SoundEmitter.h"
+#include "SoundUtils.h"
 
 odb::GLES2Lesson* gles2Lesson = nullptr;
 
@@ -52,6 +56,9 @@ std::shared_ptr<odb::Scene> victoryOOutcome;
 std::shared_ptr<odb::Scene> press;
 std::shared_ptr<odb::Scene> title;
 
+std::shared_ptr<odb::SoundEmitter> soundEmitter;
+std::shared_ptr<odb::SoundClip> soundClip;
+std::shared_ptr<odb::SoundListener> soundListener;
 
 std::shared_ptr<odb::GameRenderListener> renderListener = std::make_shared<odb::GameRenderListener>();
 
@@ -223,6 +230,16 @@ extern void init() {
     victoryOOutcome = readScene( readTextFrom("res/o_victory.obj"), readTextFrom("res/o_victory.mtl"));
     press = readScene( readTextFrom("res/press.obj"), readTextFrom("res/press.mtl"));
     title = readScene( readTextFrom("res/title.obj"), readTextFrom("res/title.mtl"));
+
+    soundListener = std::make_shared<odb::SoundListener>();
+
+    FILE *fp = fopen("res/test.wav", "rb");
+    soundClip = odb::makeSoundClipFrom( fp );
+    fclose( fp );
+
+    soundEmitter = std::make_shared<odb::SoundEmitter>( soundClip );
+
+    soundEmitter->play( soundListener );
 
 
     std::vector< std::shared_ptr<odb::NativeBitmap>> textures;
