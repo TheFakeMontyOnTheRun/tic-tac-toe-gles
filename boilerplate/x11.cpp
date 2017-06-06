@@ -18,8 +18,8 @@
 #include "Game.h"
 #include "glue.h"
 #include <iostream>
-
-#include <html5.h>
+#include <emscripten.h>
+#include <emscripten/html5.h>
 
 
 /*
