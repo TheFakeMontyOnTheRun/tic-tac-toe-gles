@@ -1,8 +1,8 @@
-#include <assert.h>
-#include <math.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
+#include <cassert>
+#include <cmath>
+#include <cstdlib>
+#include <cstdio>
+#include <cstring>
 #include <iostream>
 #include <memory>
 #include <array>

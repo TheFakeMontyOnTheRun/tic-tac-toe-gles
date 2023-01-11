@@ -4,7 +4,7 @@
 extern void draw(odb::Game& game);
 
 /* new window size or exposure */
-extern void reshape(int width, int height);
+extern void reshape();
 
 extern void init();
 

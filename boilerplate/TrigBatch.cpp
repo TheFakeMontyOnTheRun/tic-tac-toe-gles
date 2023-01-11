@@ -88,7 +88,4 @@ namespace odb {
 		}
 	}
 
-	std::shared_ptr<Material> TrigBatch::getMaterial() {
-		return material;
-	}
 }

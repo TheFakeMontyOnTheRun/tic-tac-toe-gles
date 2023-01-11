@@ -14,8 +14,8 @@ namespace odb {
 		int vertexCount;
 		std::shared_ptr<Material> material;
 	public:
-		TrigBatch(const std::vector<Trig> &triangles);
-		std::shared_ptr<Material> getMaterial();
+		explicit TrigBatch(const std::vector<Trig> &triangles);
+
 		void draw(unsigned int vertexAttributePosition, unsigned int textureCoordinatesAttributePosition, unsigned int normalAttributePosition, unsigned int tangentVectorShaderPosition);
 	};
 }

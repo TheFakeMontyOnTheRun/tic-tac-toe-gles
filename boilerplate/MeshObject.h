@@ -9,8 +9,8 @@ namespace odb {
 	class MeshObject {
 	private:
 	public:
-		std::vector<TrigBatch> trigBatches;
-		std::string id;
+		std::vector<TrigBatch> trigBatches{};
+		std::string id{};
 	};
 }
 

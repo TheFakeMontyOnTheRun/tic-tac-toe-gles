@@ -30,7 +30,7 @@ namespace odb {
         mTo = aTarget;
     }
 
-    bool CAnimation::isFinished() {
+    bool CAnimation::isFinished() const {
         return mRemainingTime < 0;
     }
 }

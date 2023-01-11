@@ -13,15 +13,11 @@ namespace odb {
 	public:
 		NativeBitmap(int aWidth, int aHeight, int *aRawData);
 
-		std::shared_ptr<NativeBitmap> makeBitmapWithHalfDimensions();
+		int getWidth() const;
 
-		int getWidth();
-
-		int getHeight();
+		int getHeight() const;
 
 		int *getPixelData();
-
-		void releaseTextureData();
 
 		~NativeBitmap();
 	};

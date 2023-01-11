@@ -8,13 +8,10 @@
 namespace odb {
 	class Material {
 	public:
-		std::shared_ptr<NativeBitmap> mBitmap;
+		std::shared_ptr<NativeBitmap> mBitmap{};
 
-		float specularExponent = 0.0f;
-		glm::vec3 ambientColour{ 0.0f, 0.0f, 0.0f };
-		glm::vec3 diffuseColour{ 0.0f, 0.0f, 0.0f };
-		std::string diffuseMapFilename;
-		std::string normalMapFilename;
+		std::string diffuseMapFilename{};
+		std::string normalMapFilename{};
 	};
 }
 

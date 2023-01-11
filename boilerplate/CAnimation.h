@@ -9,8 +9,8 @@ namespace odb {
 
     class CAnimation {
 
-        glm::mat4 mFrom;
-        glm::mat4 mTo;
+        glm::mat4 mFrom{};
+        glm::mat4 mTo{};
         long mRemainingTime;
         long mDuration;
     public:
@@ -19,7 +19,7 @@ namespace odb {
         glm::mat4 getCurrentState();
         glm::mat4 getTarget();
         void setNewTarget( glm::mat4 aTarget );
-        bool isFinished();
+        bool isFinished() const;
         void update(long ms);
     };
 }

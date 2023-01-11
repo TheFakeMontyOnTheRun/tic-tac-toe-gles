@@ -17,18 +17,13 @@ namespace odb {
 
         void clearBuffers();
 
-        glm::mat4 resetTransformMatrices( glm::vec3 translate );
-
-        void printVerboseDriverInformation();
+		void printVerboseDriverInformation();
 
         void createVBOs();
 
         void deleteVBOs();
 
-        void drawGeometry(const int vertexVbo, const int indexVbo, int vertexCount,
-                          const glm::mat4 &transform);
-
-        GLuint createProgram(const char *pVertexSource, const char *pFragmentSource);
+		GLuint createProgram(const char *pVertexSource, const char *pFragmentSource);
 
         GLuint loadShader(GLenum shaderType, const char *pSource);
 
@@ -36,45 +31,43 @@ namespace odb {
         const static unsigned short cubeIndices[6 * 6];
 
         const static glm::vec4 ambientLightFullColor;
-        const static glm::vec4 ambientLightOffColor;
 
-        glm::mat4 cubeTransformMatrix;
-        glm::mat4 projectionMatrix;
+		glm::mat4 projectionMatrix{};
 
-        GLint tangentVectorShaderPosition;
+        GLint tangentVectorShaderPosition{};
 
-		GLint vertexAttributePosition;
-		GLint modelMatrixAttributePosition;
-		GLint samplerUniformPosition;
-		GLint normalMapUniformPosition;
-		GLint textureCoordinatesAttributePosition;
-		GLint projectionMatrixAttributePosition;
-		GLint normalAttributePosition;
+		GLint vertexAttributePosition{};
+		GLint modelMatrixAttributePosition{};
+		GLint samplerUniformPosition{};
+		GLint normalMapUniformPosition{};
+		GLint textureCoordinatesAttributePosition{};
+		GLint projectionMatrixAttributePosition{};
+		GLint normalAttributePosition{};
 
-	    GLint diffuseLightPosition;
-        GLuint gProgram;
+	    GLint diffuseLightPosition{};
+        GLuint gProgram{};
 
         //VBO stuff
-        GLuint vboCubeVertexDataIndex;
-        GLuint vboCubeVertexIndicesIndex;
+        GLuint vboCubeVertexDataIndex{};
+        GLuint vboCubeVertexIndicesIndex{};
 
 
-        GLuint currentFilter;
-        float cubeRotationAngleYZ;
-        float cubeRotationAngleXZ;
+        GLuint currentFilter{};
+        float cubeRotationAngleYZ{};
+        float cubeRotationAngleXZ{};
 
-        glm::vec4 diffuseLightWorldPosition;
-        glm::vec4 diffuseLightColor;
-        glm::vec4 ambientLightColor;
+        glm::vec4 diffuseLightWorldPosition{};
+        glm::vec4 diffuseLightColor{};
+        glm::vec4 ambientLightColor{};
 
-        GLuint diffuseLightColorShaderLocation;
-        GLuint ambientLightColorShaderLocation;
+        GLuint diffuseLightColorShaderLocation{};
+        GLuint ambientLightColorShaderLocation{};
 
-        float rotationXZSpeed;
-        float rotationYZSpeed;
+        float rotationXZSpeed{};
+        float rotationYZSpeed{};
 
-		std::vector<std::shared_ptr<NativeBitmap>> mBitmaps;
-		std::vector<std::shared_ptr<Texture>> mTextures;
+		std::vector<std::shared_ptr<NativeBitmap>> mBitmaps{};
+		std::vector<std::shared_ptr<Texture>> mTextures{};
 
 	public:
         GLES2Lesson();
@@ -86,27 +79,11 @@ namespace odb {
 
 		void setTexture(std::vector<std::shared_ptr<NativeBitmap>> textures);
 
-		void setTexture(int *bitmapData, int *normalData, int width, int height, int format);
+		void render();
 
-        void render();
+		void tick();
 
-        void shutdown();
-
-        void tick();
-
-        void toggleFiltering();
-
-        void toggleLightning();
-
-        void speedUpXZ();
-
-        void speedDownXZ();
-
-        void speedUpYZ();
-
-        void speedDownYZ();
-
-        void reset();
+		void reset();
 
         void setSpeeds(const glm::vec2 &param);
 

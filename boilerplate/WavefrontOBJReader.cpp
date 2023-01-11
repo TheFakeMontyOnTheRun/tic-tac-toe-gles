@@ -27,7 +27,6 @@
 #include "Scene.h"
 #include "WavefrontOBJReader.h"
 
-std::vector<std::string> consolidateLines(std::vector<char> vector);
 std::vector< glm::vec3 > vertices;
 std::vector< glm::vec3 > normals;
 std::vector< glm::vec2 > uvs;
@@ -46,16 +45,6 @@ int intFrom(std::string str) {
 	buffer >> temp;
 
 	return temp;
-}
-
-std::string readToEndOfLine(std::vector<std::string>::iterator &position,  std::vector<std::string>::iterator &end ) {
-	std::stringstream toReturn;
-
-	while ( position != end && *position != "\n") {
-		toReturn << " " << *position;
-	}
-
-	return toReturn.str();
 }
 
 std::string filterComments(std::string input) {
@@ -277,18 +266,18 @@ std::shared_ptr<odb::Material> readMaterial( std::vector<std::string>::iterator 
 		++position;
 		std::string parameter = *position;
 		++position;
-		toReturn->specularExponent = floatFrom(parameter);
+		floatFrom(parameter);
 	};
 
 	materialTokenHandlers[ "Ka" ] = [&]() {
 		++position;
-		toReturn->ambientColour = readRGB( position, end );
+		readRGB(position, end);
 		++position;
 	};
 
 	materialTokenHandlers[ "Kd" ] = [&]() {
 		++position;
-		toReturn->diffuseColour = readRGB( position, end );
+		readRGB(position, end);
 		++position;
 	};
 
@@ -371,7 +360,7 @@ void populateSceneWith( std::string meshData, std::shared_ptr<odb::Scene> scene 
 		std::string stringLine = *it;
 
 		if ( stringLine[ 0 ] ==  'o' || stringLine[ 0 ] ==  'g' ) {
-			std::string id = stringLine;
+			std::string id;
 			++it;
 			auto object = readObjectFrom( it, end, scene->materialList );
 			scene->meshObjects.push_back( object );

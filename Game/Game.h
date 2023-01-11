@@ -22,7 +22,7 @@ namespace odb {
         EPieces mPlayerTeam = EPieces::kCircle;
         EPieces mAdversaryTeam = EPieces::kCross;
         bool gameOver = false;
-        void contrainCursorOnTable();
+        void constrainCursorOnTable();
         void makeCPUMove();
         bool checkEndGameConditions(EPieces piece);
         bool returnVictory(EPieces piece);
@@ -39,11 +39,10 @@ namespace odb {
         void moveDown();
         void moveRight();
         void setPieceOnSlot();
-        void setGameState( char slot[9]);
-        EPieces getPieceAt( int x, int y );
-        bool isCursorAt( int x, int y );
 
-        void defocusPieceAtCursorPosition();
+		EPieces getPieceAt( int x, int y );
+
+		void defocusPieceAtCursorPosition();
 
         void focusPieceAtCursorPosition();
 

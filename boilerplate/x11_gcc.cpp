@@ -1,8 +1,8 @@
-#include <assert.h>
-#include <math.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
+#include <cassert>
+#include <cmath>
+#include <cstdlib>
+#include <cstdio>
+#include <cstring>
 #include <memory>
 #include <iostream>
 #include <array>
@@ -145,7 +145,7 @@ extern void
 event_loop(Display *dpy, Window win,
            EGLDisplay egl_dpy, EGLSurface egl_surf, odb::Game& game)
 {
-   while (1) {
+   while (true) {
 
       int redraw = 0;
 
@@ -159,7 +159,7 @@ event_loop(Display *dpy, Window win,
          redraw = 1;
          break;
       case ConfigureNotify:
-         reshape(event.xconfigure.width, event.xconfigure.height);
+		  reshape();
          break;
       case KeyPress:
          {

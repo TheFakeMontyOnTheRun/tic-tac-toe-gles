@@ -9,8 +9,6 @@ namespace odb {
 	class Texture {
 	public:
 		unsigned int mTextureId;
-		int mWidth;
-		int mHeight;
 		std::shared_ptr<NativeBitmap> mNativeBitmap;
 		Texture( unsigned int textureId, std::shared_ptr<NativeBitmap> bitmap );
 	};

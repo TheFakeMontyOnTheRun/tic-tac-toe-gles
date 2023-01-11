@@ -68,7 +68,7 @@ namespace odb {
             defocusPieceAtCursorPosition();
 
             mCursor.x--;
-            contrainCursorOnTable();
+			constrainCursorOnTable();
 
             focusPieceAtCursorPosition();
         }
@@ -103,7 +103,7 @@ namespace odb {
             defocusPieceAtCursorPosition();
 
             mCursor.y--;
-            contrainCursorOnTable();
+			constrainCursorOnTable();
 
             focusPieceAtCursorPosition();
         }
@@ -114,7 +114,7 @@ namespace odb {
             defocusPieceAtCursorPosition();
 
             mCursor.y++;
-            contrainCursorOnTable();
+			constrainCursorOnTable();
 
             focusPieceAtCursorPosition();
         }
@@ -134,7 +134,7 @@ namespace odb {
             defocusPieceAtCursorPosition();
 
             mCursor.x++;
-            contrainCursorOnTable();
+			constrainCursorOnTable();
 
             focusPieceAtCursorPosition();
         }
@@ -201,8 +201,8 @@ namespace odb {
                     mRenderListener->onPieceSelectedIsO( mCursor.x, mCursor.y);
                 }
             }
-            
-            contrainCursorOnTable();
+
+			constrainCursorOnTable();
 
             if ( checkEndGameConditions(mPlayerTeam) ) {
                 mWinner = mPlayerTeam;
@@ -225,7 +225,7 @@ namespace odb {
         }
     }
 
-    void Game::contrainCursorOnTable() {
+    void Game::constrainCursorOnTable() {
         mCursor.x = std::min( std::max( 0, mCursor.x), 2 );
         mCursor.y = std::min( std::max( 0, mCursor.y), 2 );
         printStatus();
@@ -286,21 +286,7 @@ namespace odb {
         std::cout << "GameOver = " << gameOver << std::endl;
     }
 
-    void Game::setGameState(char *slot) {
-        mTable[ 0 ][ 0 ] = pieceFromChar( slot[ 0 ] );
-        mTable[ 0 ][ 1 ] = pieceFromChar( slot[ 1 ] );
-        mTable[ 0 ][ 2 ] = pieceFromChar( slot[ 2 ] );
-
-        mTable[ 1 ][ 0 ] = pieceFromChar( slot[ 3 ] );
-        mTable[ 1 ][ 1 ] = pieceFromChar( slot[ 4 ] );
-        mTable[ 1 ][ 2 ] = pieceFromChar( slot[ 5 ] );
-
-        mTable[ 2 ][ 0 ] = pieceFromChar( slot[ 6 ] );
-        mTable[ 2 ][ 1 ] = pieceFromChar( slot[ 7 ] );
-        mTable[ 2 ][ 2 ] = pieceFromChar( slot[ 8 ] );
-    }
-
-    Game::EPieces Game::pieceFromChar(char slot) {
+	Game::EPieces Game::pieceFromChar(char slot) {
 
         if ( slot == 'X' ) {
             return EPieces::kCross;
@@ -317,11 +303,7 @@ namespace odb {
         return mTable[ y ][ x ];
     }
 
-    bool Game::isCursorAt( int x, int y ) {
-        return mCursor.x == x && mCursor.y == y;
-    }
-
-    void Game::setListener(std::shared_ptr<GameRenderListener> listener) {
+	void Game::setListener(std::shared_ptr<GameRenderListener> listener) {
         mRenderListener = listener;
     }
 

@@ -1,9 +1,9 @@
-#include <assert.h>
-#include <math.h>
+#include <cassert>
+#include <cmath>
 #include <memory>
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
+#include <cstdlib>
+#include <cstdio>
+#include <cstring>
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 #include <iostream>
@@ -146,7 +146,7 @@ int main(int argc, char *argv[]) {
 	 * We can't be sure we'll get a ConfigureNotify event when the window
 	 * first appears.
 	 */
-	reshape(winWidth, winHeight);
+	reshape();
     game.printStatus();
 #ifdef __EMSCRIPTEN__
 

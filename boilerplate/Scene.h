@@ -9,7 +9,7 @@ namespace odb {
 	class Scene {
 	public:
 		std::vector<std::shared_ptr<MeshObject>> meshObjects;
-		MaterialList materialList;
+		MaterialList materialList{};
 	};
 }
 

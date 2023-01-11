@@ -1,8 +1,8 @@
-#include <assert.h>
-#include <math.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
+#include <cassert>
+#include <cmath>
+#include <cstdlib>
+#include <cstdio>
+#include <cstring>
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 #include <GLES2/gl2.h>
@@ -62,8 +62,6 @@ std::shared_ptr<odb::SoundListener> soundListener;
 
 std::shared_ptr<odb::GameRenderListener> renderListener = std::make_shared<odb::GameRenderListener>();
 
-odb::Game::EPieces playerPiece = odb::Game::EPieces::kBlank;
-
 void drawSceneAt(std::shared_ptr<odb::Scene> scene, glm::mat4 transform, int textureIndex, int normalIndex ) {
     if ( scene != nullptr ) {
         for ( auto& mesh : scene->meshObjects ) {
@@ -73,18 +71,6 @@ void drawSceneAt(std::shared_ptr<odb::Scene> scene, glm::mat4 transform, int tex
         }
     }
 }
-
-
-std::string extractTexturefrom( std::shared_ptr<odb::Scene> scene ) {
-    if ( scene != nullptr ) {
-        for ( auto& mesh : scene->meshObjects ) {
-            return mesh->trigBatches[ 0 ].getMaterial()->diffuseMapFilename;
-        }
-    }
-
-    return "res/hexa.png";
-}
-
 
 
 extern void draw(odb::Game& game) {
@@ -131,13 +117,9 @@ extern void draw(odb::Game& game) {
 }
 
 /* new window size or exposure */
-extern void reshape(int width, int height) {
+extern void reshape() {
 }
 
-
-static void
-create_shaders(void) {
-}
 
 std::string readTextFrom(std::string path) {
     std::ifstream file( path );
