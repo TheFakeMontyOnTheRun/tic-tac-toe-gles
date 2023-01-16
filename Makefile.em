@@ -19,6 +19,9 @@ all:	$(TARGET)
 serve: $(TARGET)
 	python3 -m http.server
 
+dist: $(TARGET)
+	zip dist.zip index.html index.data index.js index.wasm
+
 clean:
 	rm -f $(OBJS) $(TARGET)
 	rm *~
