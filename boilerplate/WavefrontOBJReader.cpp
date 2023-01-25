@@ -10,6 +10,7 @@
 #include <string>
 #include <iostream>
 #include <sstream>
+#include <functional>
 #include <iterator>
 #include <unordered_set>
 
@@ -27,9 +28,9 @@
 #include "Scene.h"
 #include "WavefrontOBJReader.h"
 
-std::vector< glm::vec3 > vertices;
-std::vector< glm::vec3 > normals;
-std::vector< glm::vec2 > uvs;
+std::vector<glm::vec3> vertices;
+std::vector<glm::vec3> normals;
+std::vector<glm::vec2> uvs;
 
 float floatFrom(std::string str) {
 	std::istringstream buffer(str);
@@ -51,7 +52,7 @@ std::string filterComments(std::string input) {
 	bool reading = true;
 	std::stringstream output;
 
-	for (auto &character : input) {
+	for (const auto &character: input) {
 
 		if (character == '/') {
 			reading = false;
@@ -67,7 +68,7 @@ std::string filterComments(std::string input) {
 	return output.str();
 }
 
-glm::vec3 readRGB( std::vector<std::string>::iterator &position,  std::vector<std::string>::iterator &end ) {
+glm::vec3 readRGB(std::vector<std::string>::iterator &position, std::vector<std::string>::iterator &end) {
 
 	glm::vec3 toReturn;
 
@@ -78,14 +79,14 @@ glm::vec3 readRGB( std::vector<std::string>::iterator &position,  std::vector<st
 	std::string b = *position;
 	++position;
 
-	toReturn.r = floatFrom( r );
-	toReturn.b = floatFrom( g );
-	toReturn.b = floatFrom( b );
+	toReturn.r = floatFrom(r);
+	toReturn.b = floatFrom(g);
+	toReturn.b = floatFrom(b);
 
 	return toReturn;
 }
 
-glm::vec3 readVec3( std::vector<std::string>::iterator &position,  std::vector<std::string>::iterator &end ) {
+glm::vec3 readVec3(std::vector<std::string>::iterator &position, std::vector<std::string>::iterator &end) {
 
 	glm::vec3 toReturn;
 
@@ -96,14 +97,14 @@ glm::vec3 readVec3( std::vector<std::string>::iterator &position,  std::vector<s
 	std::string z = *position;
 	++position;
 
-	toReturn.x = floatFrom( x );
-	toReturn.y = floatFrom( y );
-	toReturn.z = floatFrom( z );
+	toReturn.x = floatFrom(x);
+	toReturn.y = floatFrom(y);
+	toReturn.z = floatFrom(z);
 
 	return toReturn;
 }
 
-glm::vec3 readVec2( std::vector<std::string>::iterator &position,  std::vector<std::string>::iterator &end ) {
+glm::vec3 readVec2(std::vector<std::string>::iterator &position, std::vector<std::string>::iterator &end) {
 
 	glm::vec3 toReturn;
 
@@ -112,65 +113,67 @@ glm::vec3 readVec2( std::vector<std::string>::iterator &position,  std::vector<s
 	std::string y = *position;
 	++position;
 
-	toReturn.x = floatFrom( x );
-	toReturn.y = floatFrom( y );
+	toReturn.x = floatFrom(x);
+	toReturn.y = floatFrom(y);
 
 	return toReturn;
 }
 
-std::vector<int> parseProperties( std::string vertexRawInformation ) {
+std::vector<int> parseProperties(std::string vertexRawInformation) {
 	std::vector<int> toReturn;
 
 	std::stringstream buffer;
 
-	for ( auto c : vertexRawInformation ) {
-		if ( c == '/' ) {
-			toReturn.push_back( intFrom( buffer.str() ) );
+	for (const auto &c: vertexRawInformation) {
+		if (c == '/') {
+			toReturn.push_back(intFrom(buffer.str()));
 			buffer.str(std::string());
 		} else {
 			buffer << c;
 		}
 	}
 
-	toReturn.push_back( intFrom( buffer.str() ) );
+	toReturn.push_back(intFrom(buffer.str()));
 
 	return toReturn;
 }
 
-std::shared_ptr<odb::MeshObject> readObjectFrom( std::vector<std::string>::iterator &line,  std::vector<std::string>::iterator &end, odb::MaterialList &materialList) {
+std::shared_ptr<odb::MeshObject>
+readObjectFrom(std::vector<std::string>::iterator &line, std::vector<std::string>::iterator &end,
+			   odb::MaterialList &materialList) {
 	std::shared_ptr<odb::MeshObject> toReturn = std::make_shared<odb::MeshObject>();
 
-	std::map< std::string, std::function<void(std::vector<std::string>)>> meshTokenHandlers;
-	std::vector< odb::Trig > trigsInThisBatch;
+	std::map<std::string, std::function<void(std::vector<std::string>)>> meshTokenHandlers;
+	std::vector<odb::Trig> trigsInThisBatch;
 	std::shared_ptr<odb::Material> currentMaterial;
 
 
-	meshTokenHandlers[ "v" ] = [&](std::vector<std::string> stringLine) {
+	meshTokenHandlers["v"] = [&](std::vector<std::string> stringLine) {
 		auto position = stringLine.begin();
 		++position;
-		vertices.push_back( readVec3( position, end ) );
+		vertices.push_back(readVec3(position, end));
 	};
 
-	meshTokenHandlers[ "vt" ] = [&](std::vector<std::string> stringLine) {
+	meshTokenHandlers["vt"] = [&](std::vector<std::string> stringLine) {
 		auto position = stringLine.begin();
 		++position;
-		uvs.push_back( readVec2( position, end ) );
+		uvs.push_back(readVec2(position, end));
 	};
 
-    meshTokenHandlers[ "vn" ] = [&](std::vector<std::string> stringLine) {
-        auto position = stringLine.begin();
-        ++position;
-        normals.push_back( readVec3( position, end ) );
-    };
+	meshTokenHandlers["vn"] = [&](std::vector<std::string> stringLine) {
+		auto position = stringLine.begin();
+		++position;
+		normals.push_back(readVec3(position, end));
+	};
 
-    meshTokenHandlers[ "usemtl" ] = [&](std::vector<std::string> stringLine) {
+	meshTokenHandlers["usemtl"] = [&](std::vector<std::string> stringLine) {
 		auto position = stringLine.begin();
 		++position;
 		std::string currentMaterialName = *position;
-		currentMaterial = materialList.materials[ currentMaterialName ];
+		currentMaterial = materialList.materials[currentMaterialName];
 	};
 
-	meshTokenHandlers[ "f" ] = [&](std::vector<std::string> stringLine) {
+	meshTokenHandlers["f"] = [&](std::vector<std::string> stringLine) {
 
 		odb::Trig trig;
 
@@ -178,62 +181,62 @@ std::shared_ptr<odb::MeshObject> readObjectFrom( std::vector<std::string>::itera
 		buffer << *line;
 
 		std::vector<std::string> tokenList{std::istream_iterator<std::string>(buffer),
-		                                   std::istream_iterator<std::string>{}};
+										   std::istream_iterator<std::string>{}};
 
 		std::vector<int> vertexProperties;
 
-		std::string p0 = tokenList[ 1 ];
-		vertexProperties = parseProperties( p0 );
-		trig.p0 = vertices[ vertexProperties[ 0 ] - 1 ];
+		std::string p0 = tokenList[1];
+		vertexProperties = parseProperties(p0);
+		trig.p0 = vertices[vertexProperties[0] - 1];
 
-		if ( vertexProperties.size() > 1 ) {
-			trig.t0 = uvs[ vertexProperties[ 1 ] - 1 ];
+		if (vertexProperties.size() > 1) {
+			trig.t0 = uvs[vertexProperties[1] - 1];
 		}
 
-        if ( vertexProperties.size() > 2 ) {
-            trig.n0 = normals[ vertexProperties[ 2 ] - 1 ];
-            trig.nt0 = glm::vec3( 0.0f, -1.0f, 0.0f );
-        }
-
-        std::string p1 = tokenList[ 2 ];
-		vertexProperties = parseProperties( p1 );
-		trig.p1 = vertices[ vertexProperties[ 0 ] - 1 ];
-
-		if ( vertexProperties.size() > 1 ) {
-			trig.t1 = uvs[ vertexProperties[ 1 ] - 1 ];
+		if (vertexProperties.size() > 2) {
+			trig.n0 = normals[vertexProperties[2] - 1];
+			trig.nt0 = glm::vec3(0.0f, -1.0f, 0.0f);
 		}
 
-        if ( vertexProperties.size() > 2 ) {
-            trig.n1 = normals[ vertexProperties[ 2 ] - 1 ];
-            trig.nt1 = glm::vec3( 0.0f, -1.0f, 0.0f );
-        }
+		std::string p1 = tokenList[2];
+		vertexProperties = parseProperties(p1);
+		trig.p1 = vertices[vertexProperties[0] - 1];
 
-        std::string p2 = tokenList[ 3 ];
-		vertexProperties = parseProperties( p2 );
-		trig.p2 = vertices[ vertexProperties[ 0 ] - 1 ];
-
-		if ( vertexProperties.size() > 1 ) {
-			trig.t2 = uvs[ vertexProperties[ 1 ] - 1 ];
+		if (vertexProperties.size() > 1) {
+			trig.t1 = uvs[vertexProperties[1] - 1];
 		}
 
-        if ( vertexProperties.size() > 2 ) {
-            trig.n2 = normals[ vertexProperties[ 2 ] - 1 ];
-            trig.nt2 = glm::vec3( 0.0f, -1.0f, 0.0f );
-        }
+		if (vertexProperties.size() > 2) {
+			trig.n1 = normals[vertexProperties[2] - 1];
+			trig.nt1 = glm::vec3(0.0f, -1.0f, 0.0f);
+		}
 
-        trigsInThisBatch.push_back( trig );
+		std::string p2 = tokenList[3];
+		vertexProperties = parseProperties(p2);
+		trig.p2 = vertices[vertexProperties[0] - 1];
+
+		if (vertexProperties.size() > 1) {
+			trig.t2 = uvs[vertexProperties[1] - 1];
+		}
+
+		if (vertexProperties.size() > 2) {
+			trig.n2 = normals[vertexProperties[2] - 1];
+			trig.nt2 = glm::vec3(0.0f, -1.0f, 0.0f);
+		}
+
+		trigsInThisBatch.push_back(trig);
 	};
 
 
-	while ( line != end ) {
+	while (line != end) {
 		std::string stringLine = *line;
 
-		if ( stringLine.length() == 0 ) {
+		if (stringLine.length() == 0) {
 			++line;
 			continue;
 		}
 
-		if ( stringLine[ 0 ] == 'o' ) {
+		if (stringLine[0] == 'o') {
 			return toReturn;
 		}
 
@@ -241,64 +244,65 @@ std::shared_ptr<odb::MeshObject> readObjectFrom( std::vector<std::string>::itera
 		buffer << filterComments(stringLine);
 
 		std::vector<std::string> tokenList{std::istream_iterator<std::string>(buffer),
-		                                   std::istream_iterator<std::string>{}};
+										   std::istream_iterator<std::string>{}};
 
-		auto handler = meshTokenHandlers[ tokenList[ 0 ] ];
+		auto handler = meshTokenHandlers[tokenList[0]];
 
-		if ( handler != nullptr ) {
+		if (handler != nullptr) {
 			handler(tokenList);
 		}
 		++line;
 	}
 
-	odb::TrigBatch batch( trigsInThisBatch );
-	toReturn->trigBatches.push_back( batch );
+	odb::TrigBatch batch(trigsInThisBatch);
+	toReturn->trigBatches.push_back(batch);
 
 	return toReturn;
 }
 
-std::shared_ptr<odb::Material> readMaterial( std::vector<std::string>::iterator &position,  std::vector<std::string>::iterator &end ) {
+std::shared_ptr<odb::Material>
+readMaterial(std::vector<std::string>::iterator &position, std::vector<std::string>::iterator &end) {
 	std::shared_ptr<odb::Material> toReturn = std::make_shared<odb::Material>();
 
-	std::map< std::string, std::function<void(void)>> materialTokenHandlers;
+	std::map<std::string, std::function<void(void)>> materialTokenHandlers;
 
-	materialTokenHandlers[ "Ns" ] = [&]() {
+	materialTokenHandlers["Ns"] = [&]() {
 		++position;
 		std::string parameter = *position;
 		++position;
 		floatFrom(parameter);
 	};
 
-	materialTokenHandlers[ "Ka" ] = [&]() {
+	materialTokenHandlers["Ka"] = [&]() {
 		++position;
 		readRGB(position, end);
 		++position;
 	};
 
-	materialTokenHandlers[ "Kd" ] = [&]() {
+	materialTokenHandlers["Kd"] = [&]() {
 		++position;
 		readRGB(position, end);
 		++position;
 	};
 
 
-	materialTokenHandlers[ "map_Kd" ] = [&]() {
+	materialTokenHandlers["map_Kd"] = [&]() {
 		++position;
 		toReturn->diffuseMapFilename = *position;//readToEndOfLine( position, end );
 		++position;
 	};
 
-	materialTokenHandlers[ "map_bump" ] = [&]() {
+	materialTokenHandlers["map_bump"] = [&]() {
 		++position;
 		toReturn->normalMapFilename = *position;//readToEndOfLine( position, end );
 		++position;
 	};
 
-	while ( position != end && *position != "newmtl" ) {
+	while (position != end && *position != "newmtl") {
 
-		auto handler = materialTokenHandlers[ *position ];
+		auto handler = materialTokenHandlers[*position];
 
-		if ( handler != nullptr ) {
+		if (handler != nullptr) {
 			handler();
 		} else {
 			++position;
@@ -307,23 +311,23 @@ std::shared_ptr<odb::Material> readMaterial( std::vector<std::string>::iterator 
 	return toReturn;
 }
 
-odb::MaterialList readMaterialsFrom( std::string materialData ) {
+odb::MaterialList readMaterialsFrom(std::string materialData) {
 	odb::MaterialList toReturn;
 
 	std::stringstream buffer;
 	buffer << filterComments(materialData);
 	std::vector<std::string> tokenList{std::istream_iterator<std::string>(buffer),
-	                                   std::istream_iterator<std::string>{}};
+									   std::istream_iterator<std::string>{}};
 	auto it = tokenList.begin();
 	auto end = tokenList.end();
 
-	while ( it != end ) {
-		if ( *it ==  "newmtl" ) {
+	while (it != end) {
+		if (*it == "newmtl") {
 			++it;
 			std::string id = *it;
 			++it;
-			auto material = readMaterial( it, end );
-			toReturn.materials[ id ] = material;
+			auto material = readMaterial(it, end);
+			toReturn.materials[id] = material;
 		} else {
 			++it;
 		}
@@ -337,9 +341,9 @@ std::vector<std::string> consolidateLines(std::string data) {
 
 	std::stringstream buffer;
 
-	for ( auto c : data ) {
-		if ( c == '\n' ) {
-			lines.push_back( buffer.str() );
+	for (const auto &c: data) {
+		if (c == '\n') {
+			lines.push_back(buffer.str());
 			buffer.str(std::string());
 		} else {
 			buffer << c;
@@ -349,27 +353,26 @@ std::vector<std::string> consolidateLines(std::string data) {
 	return lines;
 }
 
-void populateSceneWith( std::string meshData, std::shared_ptr<odb::Scene> scene ) {
+void populateSceneWith(std::string meshData, std::shared_ptr<odb::Scene> scene) {
 	odb::MaterialList toReturn;
-	std::vector<std::string> tokenList = consolidateLines( meshData );
+	std::vector<std::string> tokenList = consolidateLines(meshData);
 	auto it = tokenList.begin();
 	auto end = tokenList.end();
 
-	while ( it != end ) {
+	while (it != end) {
 
 		std::string stringLine = *it;
 
-		if ( stringLine[ 0 ] ==  'o' || stringLine[ 0 ] ==  'g' ) {
+		if (stringLine[0] == 'o' || stringLine[0] == 'g') {
 			std::string id;
 			++it;
-			auto object = readObjectFrom( it, end, scene->materialList );
-			scene->meshObjects.push_back( object );
+			auto object = readObjectFrom(it, end, scene->materialList);
+			scene->meshObjects.push_back(object);
 		} else {
 			++it;
 		}
 	}
 }
-
 
 
 std::shared_ptr<odb::Scene> readScene(std::string objFileContents, std::string materialFileContents) {
@@ -381,7 +384,7 @@ std::shared_ptr<odb::Scene> readScene(std::string objFileContents, std::string m
 
 	std::shared_ptr<odb::Scene> scene = std::make_shared<odb::Scene>();
 	scene->materialList = readMaterialsFrom(materialFileContents);
-	populateSceneWith( objFileContents, scene );
+	populateSceneWith(objFileContents, scene);
 
 	return scene;
 }

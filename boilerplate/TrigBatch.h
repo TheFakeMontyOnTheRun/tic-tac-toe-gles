@@ -16,7 +16,8 @@ namespace odb {
 	public:
 		explicit TrigBatch(const std::vector<Trig> &triangles);
 
-		void draw(unsigned int vertexAttributePosition, unsigned int textureCoordinatesAttributePosition, unsigned int normalAttributePosition, unsigned int tangentVectorShaderPosition);
+		void draw(unsigned int vertexAttributePosition, unsigned int textureCoordinatesAttributePosition,
+				  unsigned int normalAttributePosition, unsigned int tangentVectorShaderPosition);
 	};
 }
 

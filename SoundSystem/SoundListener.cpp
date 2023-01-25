@@ -14,20 +14,20 @@
 
 #include "SoundListener.h"
 
-ALCdevice* device;
-ALCcontext* context;
+ALCdevice *device;
+ALCcontext *context;
 
 namespace odb {
-    SoundListener::SoundListener() {
-        printf("Default device: %s\n", alcGetString(NULL, ALC_DEFAULT_DEVICE_SPECIFIER));
+	SoundListener::SoundListener() {
+		printf("Default device: %s\n", alcGetString(NULL, ALC_DEFAULT_DEVICE_SPECIFIER));
 
-        device = alcOpenDevice(NULL);
-        context = alcCreateContext(device, NULL);
-        alcMakeContextCurrent(context);
+		device = alcOpenDevice(NULL);
+		context = alcCreateContext(device, NULL);
+		alcMakeContextCurrent(context);
 
-        printf("OpenAL version: %s\n", alGetString(AL_VERSION));
-        printf("OpenAL vendor: %s\n", alGetString(AL_VENDOR));
-        printf("OpenAL renderer: %s\n", alGetString(AL_RENDERER));
+		printf("OpenAL version: %s\n", alGetString(AL_VERSION));
+		printf("OpenAL vendor: %s\n", alGetString(AL_VENDOR));
+		printf("OpenAL renderer: %s\n", alGetString(AL_RENDERER));
 
-    }
+	}
 }

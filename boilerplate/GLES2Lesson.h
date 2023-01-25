@@ -7,34 +7,34 @@
 
 namespace odb {
 
-    class GLES2Lesson {
+	class GLES2Lesson {
 
-        void fetchShaderLocations();
+		void fetchShaderLocations();
 
-        void setPerspective();
+		void setPerspective();
 
-        void prepareShaderProgram();
+		void prepareShaderProgram();
 
-        void clearBuffers();
+		void clearBuffers();
 
 		void printVerboseDriverInformation();
 
-        void createVBOs();
+		void createVBOs();
 
-        void deleteVBOs();
+		void deleteVBOs();
 
 		GLuint createProgram(const char *pVertexSource, const char *pFragmentSource);
 
-        GLuint loadShader(GLenum shaderType, const char *pSource);
+		GLuint loadShader(GLenum shaderType, const char *pSource);
 
-        const static float cubeVertices[6 * 4 * 12];
-        const static unsigned short cubeIndices[6 * 6];
+		const static float cubeVertices[6 * 4 * 12];
+		const static unsigned short cubeIndices[6 * 6];
 
-        const static glm::vec4 ambientLightFullColor;
+		const static glm::vec4 ambientLightFullColor;
 
 		glm::mat4 projectionMatrix{};
 
-        GLint tangentVectorShaderPosition{};
+		GLint tangentVectorShaderPosition{};
 
 		GLint vertexAttributePosition{};
 		GLint modelMatrixAttributePosition{};
@@ -44,38 +44,38 @@ namespace odb {
 		GLint projectionMatrixAttributePosition{};
 		GLint normalAttributePosition{};
 
-	    GLint diffuseLightPosition{};
-        GLuint gProgram{};
+		GLint diffuseLightPosition{};
+		GLuint gProgram{};
 
-        //VBO stuff
-        GLuint vboCubeVertexDataIndex{};
-        GLuint vboCubeVertexIndicesIndex{};
+		//VBO stuff
+		GLuint vboCubeVertexDataIndex{};
+		GLuint vboCubeVertexIndicesIndex{};
 
 
-        GLuint currentFilter{};
-        float cubeRotationAngleYZ{};
-        float cubeRotationAngleXZ{};
+		GLuint currentFilter{};
+		float cubeRotationAngleYZ{};
+		float cubeRotationAngleXZ{};
 
-        glm::vec4 diffuseLightWorldPosition{};
-        glm::vec4 diffuseLightColor{};
-        glm::vec4 ambientLightColor{};
+		glm::vec4 diffuseLightWorldPosition{};
+		glm::vec4 diffuseLightColor{};
+		glm::vec4 ambientLightColor{};
 
-        GLuint diffuseLightColorShaderLocation{};
-        GLuint ambientLightColorShaderLocation{};
+		GLuint diffuseLightColorShaderLocation{};
+		GLuint ambientLightColorShaderLocation{};
 
-        float rotationXZSpeed{};
-        float rotationYZSpeed{};
+		float rotationXZSpeed{};
+		float rotationYZSpeed{};
 
 		std::vector<std::shared_ptr<NativeBitmap>> mBitmaps{};
 		std::vector<std::shared_ptr<Texture>> mTextures{};
 
 	public:
-        GLES2Lesson();
+		GLES2Lesson();
 
-        ~GLES2Lesson();
+		~GLES2Lesson();
 
-        bool init(float w, float h, const std::string &vertexShader,
-                  const std::string &fragmentShader);
+		bool init(float w, float h, const std::string &vertexShader,
+				  const std::string &fragmentShader);
 
 		void setTexture(std::vector<std::shared_ptr<NativeBitmap>> textures);
 
@@ -85,9 +85,9 @@ namespace odb {
 
 		void reset();
 
-        void setSpeeds(const glm::vec2 &param);
+		void setSpeeds(const glm::vec2 &param);
 
-        void drawTrigBatch( odb::TrigBatch &batch, glm::mat4 transform, int textureIndex, int normalIndex );
-    };
+		void drawTrigBatch(odb::TrigBatch &batch, glm::mat4 transform, int textureIndex, int normalIndex);
+	};
 }
 #endif //LESSON02_GLES2LESSON_H

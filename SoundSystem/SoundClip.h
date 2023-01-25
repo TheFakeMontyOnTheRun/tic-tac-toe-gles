@@ -5,12 +5,12 @@
 #define TIC_TAC_TOE_GLES_SOUNDCLIP_H
 
 namespace odb {
-    class SoundClip {
-    public:
-        unsigned int mBufferHandle;
+	class SoundClip {
+	public:
+		unsigned int mBufferHandle;
 
-        SoundClip(unsigned char *bufferData, int size, int offset, int bits, int channels, int frequency);
-    };
+		SoundClip(unsigned char *bufferData, int size, int offset, int bits, int channels, int frequency);
+	};
 }
 
 #endif //TIC_TAC_TOE_GLES_SOUNDCLIP_H

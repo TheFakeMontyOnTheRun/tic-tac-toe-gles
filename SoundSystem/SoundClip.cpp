@@ -12,29 +12,29 @@
 #include "SoundClip.h"
 
 namespace odb {
-    SoundClip::SoundClip(unsigned char *buffer, int size, int offset, int bits, int channels, int frequency) {
+	SoundClip::SoundClip(unsigned char *buffer, int size, int offset, int bits, int channels, int frequency) {
 
-        ALenum format = 0;
+		ALenum format = 0;
 
-        if (bits == 8) {
-            if (channels == 1) {
-                format = AL_FORMAT_MONO8;
-            } else if (channels == 2) {
-                format = AL_FORMAT_STEREO8;
-            }
-        } else if (bits == 16) {
-            if (channels == 1) {
-                format = AL_FORMAT_MONO16;
-            } else if (channels == 2) {
-                format = AL_FORMAT_STEREO16;
-            }
-        }
+		if (bits == 8) {
+			if (channels == 1) {
+				format = AL_FORMAT_MONO8;
+			} else if (channels == 2) {
+				format = AL_FORMAT_STEREO8;
+			}
+		} else if (bits == 16) {
+			if (channels == 1) {
+				format = AL_FORMAT_MONO16;
+			} else if (channels == 2) {
+				format = AL_FORMAT_STEREO16;
+			}
+		}
 
-        ALuint buffers[1];
-        alGenBuffers(1, buffers);
-        mBufferHandle = buffers[ 0 ];
-        alBufferData(mBufferHandle, format, &buffer[offset], size - offset, frequency);
+		ALuint buffers[1];
+		alGenBuffers(1, buffers);
+		mBufferHandle = buffers[0];
+		alBufferData(mBufferHandle, format, &buffer[offset], size - offset, frequency);
 
-        std::cout << "is buffer?" << (alIsBuffer( mBufferHandle ) == AL_TRUE) << std::endl;
-    }
+		std::cout << "is buffer?" << (alIsBuffer(mBufferHandle) == AL_TRUE) << std::endl;
+	}
 }

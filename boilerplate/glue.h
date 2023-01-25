@@ -1,7 +1,7 @@
 #ifndef GLUE_H
 #define GLUE_H
 
-extern void draw(odb::Game& game);
+extern void draw(odb::Game &game);
 
 /* new window size or exposure */
 extern void reshape();
@@ -14,16 +14,15 @@ extern void init();
  * Return the window and context handles.
  */
 extern void make_x_window(Display *x_dpy, EGLDisplay egl_dpy,
-              const char *name,
-              int x, int y, int width, int height,
-              Window *winRet,
-              EGLContext *ctxRet,
-              EGLSurface *surfRet);
+						  const char *name,
+						  int x, int y, int width, int height,
+						  Window *winRet,
+						  EGLContext *ctxRet,
+						  EGLSurface *surfRet);
 
 
 extern void event_loop(Display *dpy, Window win,
-           EGLDisplay egl_dpy, EGLSurface egl_surf, odb::Game& game );
-
+					   EGLDisplay egl_dpy, EGLSurface egl_surf, odb::Game &game);
 
 
 #define  LOGI(...)  printf(__VA_ARGS__)

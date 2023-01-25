@@ -25,10 +25,10 @@ odb::Game game;
 #include <emscripten/html5.h>
 
 extern "C" {
-    int int_sqrt(int x) {
-        std::cout << "JS->C++" << std::endl;
-        return sqrt(x);
-    }
+	int int_sqrt(int x) {
+		std::cout << "JS->C++" << std::endl;
+		return sqrt(x);
+	}
 
   EM_BOOL keydown_callback(int eventType, const EmscriptenKeyboardEvent *e, void *userData) {
 
@@ -59,16 +59,16 @@ extern "C" {
 		game.printStatus();
 
 		EM_ASM (
-		    int_sqrt = Module.cwrap('int_sqrt', 'number', ['number']);
-            int_sqrt(12);
-            int_sqrt(28);
+			int_sqrt = Module.cwrap('int_sqrt', 'number', ['number']);
+			int_sqrt(12);
+			int_sqrt(28);
 		);
 	}
 
 	return true;
   }
   EM_BOOL keypress_callback(int eventType, const EmscriptenKeyboardEvent *e, void *userData) {
-    	return true;
+		return true;
   }
   EM_BOOL keyup_callback(int eventType, const EmscriptenKeyboardEvent *e, void *userData) {
 	return true;
@@ -77,15 +77,15 @@ extern "C" {
 #endif
 
 
-	const int winWidth = 640, winHeight = 480;
+const int winWidth = 640, winHeight = 480;
 
-	Display *x_dpy;
-	Window win;
-	EGLSurface egl_surf;
-	EGLContext egl_ctx;
-	EGLDisplay egl_dpy;
-	EGLint egl_major, egl_minor;
-	const char *s;
+Display *x_dpy;
+Window win;
+EGLSurface egl_surf;
+EGLContext egl_ctx;
+EGLDisplay egl_dpy;
+EGLint egl_major, egl_minor;
+const char *s;
 
 void gameLoopTick();
 
@@ -99,7 +99,7 @@ int main(int argc, char *argv[]) {
 		return -1;
 	}
 
-	egl_dpy = eglGetDisplay((EGLNativeDisplayType)x_dpy);
+	egl_dpy = eglGetDisplay((EGLNativeDisplayType) x_dpy);
 
 	if (!egl_dpy) {
 		printf("Error: eglGetDisplay() failed\n");
@@ -124,8 +124,8 @@ int main(int argc, char *argv[]) {
 	printf("EGL_CLIENT_APIS = %s\n", s);
 
 	make_x_window(x_dpy, egl_dpy,
-	              "OpenGL ES 2.x tri", 0, 0, winWidth, winHeight,
-	              &win, &egl_ctx, &egl_surf);
+				  "OpenGL ES 2.x tri", 0, 0, winWidth, winHeight,
+				  &win, &egl_ctx, &egl_surf);
 
 	XMapWindow(x_dpy, win);
 
@@ -147,7 +147,7 @@ int main(int argc, char *argv[]) {
 	 * first appears.
 	 */
 	reshape();
-    game.printStatus();
+	game.printStatus();
 #ifdef __EMSCRIPTEN__
 
 
@@ -170,13 +170,13 @@ int main(int argc, char *argv[]) {
 	}
 
 	EmscriptenFullscreenStrategy s;
-      memset(&s, 0, sizeof(s));
-      s.scaleMode = EMSCRIPTEN_FULLSCREEN_SCALE_ASPECT;
-      s.canvasResolutionScaleMode = EMSCRIPTEN_FULLSCREEN_CANVAS_SCALE_NONE;
-      s.filteringMode = EMSCRIPTEN_FULLSCREEN_FILTERING_DEFAULT;
-    EMSCRIPTEN_RESULT ret = emscripten_enter_soft_fullscreen(0, &s);
+	  memset(&s, 0, sizeof(s));
+	  s.scaleMode = EMSCRIPTEN_FULLSCREEN_SCALE_ASPECT;
+	  s.canvasResolutionScaleMode = EMSCRIPTEN_FULLSCREEN_CANVAS_SCALE_NONE;
+	  s.filteringMode = EMSCRIPTEN_FULLSCREEN_FILTERING_DEFAULT;
+	EMSCRIPTEN_RESULT ret = emscripten_enter_soft_fullscreen(0, &s);
 
-      emscripten_set_main_loop( gameLoopTick, 60, 1 );
+	  emscripten_set_main_loop( gameLoopTick, 60, 1 );
 #else
 	event_loop(x_dpy, win, egl_dpy, egl_surf, game);
 #endif
@@ -191,5 +191,5 @@ int main(int argc, char *argv[]) {
 
 
 void gameLoopTick() {
-	event_loop(x_dpy, win, egl_dpy, egl_surf, game );
+	event_loop(x_dpy, win, egl_dpy, egl_surf, game);
 }

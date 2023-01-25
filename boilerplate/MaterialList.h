@@ -8,7 +8,7 @@
 namespace odb {
 	class MaterialList {
 	public:
-		std::map< std::string, std::shared_ptr<odb::Material>> materials;
+		std::map<std::string, std::shared_ptr<odb::Material>> materials;
 	};
 }
 

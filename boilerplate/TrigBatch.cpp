@@ -18,13 +18,14 @@
 
 namespace odb {
 	void TrigBatch::draw(GLuint vertexAttributePosition,
-	                     GLuint textureCoordinatesAttributePosition , GLuint normalAttributePosition, GLuint tangentVectorShaderPosition) {
+						 GLuint textureCoordinatesAttributePosition, GLuint normalAttributePosition,
+						 GLuint tangentVectorShaderPosition) {
 
 		glVertexAttribPointer(vertexAttributePosition, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float),
-		                      vertex);
+							  vertex);
 
 		glVertexAttribPointer(textureCoordinatesAttributePosition, 2, GL_FLOAT, GL_FALSE,
-		                      2 * sizeof(float), uv);
+							  2 * sizeof(float), uv);
 
 		glVertexAttribPointer(normalAttributePosition, 3, GL_FLOAT, GL_TRUE,
 							  sizeof(float) * 3, normal);
@@ -46,7 +47,7 @@ namespace odb {
 		int normalTangentIndex = 0;
 		int uvIndex = 0;
 		vertexCount = 0;
-		for (auto &trig : triangles) {
+		for (const auto &trig: triangles) {
 			vertex[vertexIndex++] = trig.p0.x;
 			vertex[vertexIndex++] = trig.p0.y;
 			vertex[vertexIndex++] = trig.p0.z;
@@ -87,5 +88,4 @@ namespace odb {
 			++vertexCount;
 		}
 	}
-
 }
