@@ -1,3 +1,6 @@
 [submodule "includes/glm-trunk"]
 	path = includes/glm-trunk
 	url = https://github.com/g-truc/glm.git
+[submodule "includes/libpng"]
+	path = includes/libpng
+	url = git@github.com:TheFakeMontyOnTheRun/libpng.git
