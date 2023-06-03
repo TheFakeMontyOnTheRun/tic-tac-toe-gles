@@ -9,13 +9,29 @@
 #include <cstdlib>
 #include <cstdio>
 #include <cstring>
+
+#ifdef X11_GLUE
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
+#endif
+
 #include <memory>
 #include <vector>
 #include <map>
+
+
+#ifdef __APPLE__
+#define GL_SILENCE_DEPRECATION
+#if TARGET_IOS
+#include <OpenGLES/ES2/gl.h>
+#include <OpenGLES/ES2/glext.h>
+#else
+#include <OpenGL/gl3.h>
+#endif
+#else
 #include <GLES2/gl2.h>
 #include <EGL/egl.h>
+#endif
 
 #include "glm/glm.hpp"
 #include "CAnimation.h"

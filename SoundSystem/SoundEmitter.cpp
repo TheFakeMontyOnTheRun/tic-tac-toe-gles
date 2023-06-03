@@ -10,8 +10,13 @@
 #include "glm/glm.hpp"
 #include <memory>
 
+#ifdef __APPLE__
+#include <OpenAl/OpenAL.h>
+#else
 #include <AL/al.h>
 #include <AL/alc.h>
+#endif
+
 #include <unistd.h>
 
 #include "SoundClip.h"

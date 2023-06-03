@@ -1,4 +1,4 @@
-CXXFLAGS = -O2 -g -c -std=c++0x -Iincludes -Iincludes/glm-trunk -IGame -Iboilerplate -ISoundSystem
+CXXFLAGS = -O2 -g -c -std=c++0x -Iincludes -Iincludes/glm-trunk -IGame -Iboilerplate -ISoundSystem -DX11_GLUE
 LDFLAGS = -lX11 -lGLESv2 -lEGL -lpng -lopenal
 CXX = clang++
 OBJS = boilerplate/main.o boilerplate/render.o boilerplate/x11_gcc.o boilerplate/GLES2Lesson.o Game/Game.o \

@@ -2,7 +2,20 @@
 // Created by monty on 25/02/16.
 //
 #include <glm/glm.hpp>
+
+#ifdef __APPLE__
+#define GL_SILENCE_DEPRECATION
+#if TARGET_IOS
+#include <OpenGLES/ES2/gl.h>
+#include <OpenGLES/ES2/glext.h>
+#else
+#include <OpenGL/gl3.h>
+#endif
+#else
 #include <GLES2/gl2.h>
+#endif
+
+#include <cstdint>
 #include <memory>
 #include <vector>
 #include <iostream>

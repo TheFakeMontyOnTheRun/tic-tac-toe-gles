@@ -1,0 +1,19 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "031CF7FC3A878E88839AE97972931C1725928F9F",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "4F03B9FC79178DB4D0F5E5BBE2C98C4CEB860089" : 0,
+    "031CF7FC3A878E88839AE97972931C1725928F9F" : 0
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "1A073E94-760D-46BC-BE0C-61AE73E9B1DA",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "4F03B9FC79178DB4D0F5E5BBE2C98C4CEB860089" : "development",
+    "031CF7FC3A878E88839AE97972931C1725928F9F" : "develop\/"
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "TicTacToe",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 203,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "TicTacToe.xcodeproj",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : []
+}

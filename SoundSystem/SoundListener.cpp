@@ -5,10 +5,15 @@
 #include <emscripten.h>
 #endif
 
+
 #include <stdio.h>
 
+#ifdef __APPLE__
+#include <OpenAL/OpenAL.h>
+#else
 #include <AL/al.h>
 #include <AL/alc.h>
+#endif
 
 #include "glm/glm.hpp"
 
